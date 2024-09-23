@@ -95,7 +95,7 @@ export const GET = async (
     const isProduction = process.env.NODE_ENV === 'production';
 
     const browser = await puppeteer.launch({
-      executablePath: isProduction ? '/usr/bin/chromium-browser' : undefined, // Let Puppeteer choose locally
+      executablePath: isProduction ? '/usr/bin/chromium' : undefined, // Let Puppeteer choose locally
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
       headless: true,
     });
