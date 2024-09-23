@@ -66,6 +66,30 @@ export const GET = async (
       },
    );
 
+   handlers.registerHelper('multiply', function (a: number, b: number) {
+      const numA = parseFloat(a as any);
+      const numB = parseFloat(b as any);
+      if (!isNaN(numA) && !isNaN(numB)) {
+         return (numA * numB).toFixed(2);
+      }
+      return '0.00';
+   });
+
+   handlers.registerHelper(
+      'sum',
+      function (array: any[], property: string) {
+         if (Array.isArray(array) && typeof property === 'string') {
+            return array
+               .reduce((sum, item) => {
+                  const value = parseFloat(item[property]);
+                  return sum + (isNaN(value) ? 0 : value);
+               }, 0)
+               .toFixed(2);
+         }
+         return '0.00';
+      },
+   );
+
     const html = template({ invoice });
 
     const browser = await puppeteer.launch();
