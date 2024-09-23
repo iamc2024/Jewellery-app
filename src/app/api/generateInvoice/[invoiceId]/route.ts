@@ -4,7 +4,7 @@ import fs from 'fs';
 import path from 'path'; // Import path
 import handlers from 'handlebars';
 import { NextResponse } from 'next/server';
-import puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer-core';
 
 export const GET = async (
   req: Request,
@@ -92,8 +92,15 @@ export const GET = async (
 
     const html = template({ invoice });
 
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
+    const isProduction = process.env.NODE_ENV === 'production';
+
+    const browser = await puppeteer.launch({
+      executablePath: isProduction ? '/usr/bin/chromium-browser' : undefined, // Let Puppeteer choose locally
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      headless: true,
+    });
+    
+        const page = await browser.newPage();
 
     await page.setContent(html, { waitUntil: 'networkidle0' });
 
