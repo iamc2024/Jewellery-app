@@ -1,0 +1,145 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String     @id
+  username     String     @unique
+  displayName  String
+  passwordHash String
+  googleId     String?    @unique
+  email        String     @unique
+  companyName String
+  address     String
+  sessions     Session[]
+  Customers    Customer[]
+  Invoices     Invoice[]
+  invoiceCount Int       @default(0)
+
+    isMember     Boolean    @default(false)
+  membershipId String?    //
+  membershipStart DateTime?   
+  membershipEnd   DateTime?   
+  membership   Membership? @relation(fields: [membershipId], references: [id], onDelete: Cascade )
+  
+
+  createdAt DateTime @default(now())
+
+  @@map("users")
+}
+
+
+model Membership {
+  id          String  @id @default(cuid())
+  name        String
+  price       Float
+  duration    Int     
+  users       User[]
+
+  createdAt DateTime @default(now())
+}
+
+model Customer {
+  id           String    @id @default(uuid())
+  name         String
+  mobileNumber String    @unique
+  address      String
+  adminId      String
+  user         User      @relation(fields: [adminId], references: [id])
+  invoices     Invoice[]
+
+  @@map("customers")
+}
+
+model Invoice {
+  id         String   @id @default(uuid())
+  customerId String
+  totalAmount Float
+  paidAmount  Float
+  dueAmount   Float
+  rateId      String
+  adminId   String
+
+
+
+  products  Product[]
+
+  customer   Customer @relation(fields: [customerId], references: [id] , onDelete: Cascade)
+  rate      Rate      @relation(fields: [rateId], references: [id],  onDelete: Cascade)
+  user      User      @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now())
+
+  @@map("invoices")
+}
+
+
+model Product {
+  id                String   @id @default(uuid())
+  description       String
+  purity            purity
+  netQuantity       Float
+  GrossWeight       Float
+  GrossProductPrice Float
+  netStoneWeight    Float
+  stonePrice        Float
+  MakingCharge      Float
+  discount          Float
+  InvoiceId         String
+  CGST              Float
+  SGST              Float
+  productValue      Float
+  MakingChargeValue Float
+  CGSTValue         Float
+  SGSTValue         Float
+  DiscountValue     Float
+
+  invoice           Invoice @relation(fields: [InvoiceId], references: [id], onDelete: Cascade)
+
+  @@map("products")
+}
+
+model Rate {
+  id         String   @id @default(uuid())
+  date       String
+  gold14K    Float
+  gold18K    Float
+  gold22K    Float
+  gold24K    Float
+  Platinum95 Float
+
+  invoices Invoice[]
+
+  createdAt DateTime @default(now())
+
+  @@map("rates")
+}
+
+
+model Session {
+  id        String   @id
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  expiresAt DateTime
+
+  @@map("sessions")
+}
+
+enum purity {
+  K14
+  K18
+  K22
+  K24
+  Platinum95
+}

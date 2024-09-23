@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <style>
+      *,
+:after,
+:before {
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-pan-x: ;
+  --tw-pan-y: ;
+  --tw-pinch-zoom: ;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-gradient-from-position: ;
+  --tw-gradient-via-position: ;
+  --tw-gradient-to-position: ;
+  --tw-ordinal: ;
+  --tw-slashed-zero: ;
+  --tw-numeric-figure: ;
+  --tw-numeric-spacing: ;
+  --tw-numeric-fraction: ;
+  --tw-ring-inset: ;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgba(59, 130, 246, 0.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-blur: ;
+  --tw-brightness: ;
+  --tw-contrast: ;
+  --tw-grayscale: ;
+  --tw-hue-rotate: ;
+  --tw-invert: ;
+  --tw-saturate: ;
+  --tw-sepia: ;
+  --tw-drop-shadow: ;
+  --tw-backdrop-blur: ;
+  --tw-backdrop-brightness: ;
+  --tw-backdrop-contrast: ;
+  --tw-backdrop-grayscale: ;
+  --tw-backdrop-hue-rotate: ;
+  --tw-backdrop-invert: ;
+  --tw-backdrop-opacity: ;
+  --tw-backdrop-saturate: ;
+  --tw-backdrop-sepia: ;
+  --tw-contain-size: ;
+  --tw-contain-layout: ;
+  --tw-contain-paint: ;
+  --tw-contain-style: ;
+}
+::backdrop {
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-pan-x: ;
+  --tw-pan-y: ;
+  --tw-pinch-zoom: ;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-gradient-from-position: ;
+  --tw-gradient-via-position: ;
+  --tw-gradient-to-position: ;
+  --tw-ordinal: ;
+  --tw-slashed-zero: ;
+  --tw-numeric-figure: ;
+  --tw-numeric-spacing: ;
+  --tw-numeric-fraction: ;
+  --tw-ring-inset: ;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgba(59, 130, 246, 0.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-blur: ;
+  --tw-brightness: ;
+  --tw-contrast: ;
+  --tw-grayscale: ;
+  --tw-hue-rotate: ;
+  --tw-invert: ;
+  --tw-saturate: ;
+  --tw-sepia: ;
+  --tw-drop-shadow: ;
+  --tw-backdrop-blur: ;
+  --tw-backdrop-brightness: ;
+  --tw-backdrop-contrast: ;
+  --tw-backdrop-grayscale: ;
+  --tw-backdrop-hue-rotate: ;
+  --tw-backdrop-invert: ;
+  --tw-backdrop-opacity: ;
+  --tw-backdrop-saturate: ;
+  --tw-backdrop-sepia: ;
+  --tw-contain-size: ;
+  --tw-contain-layout: ;
+  --tw-contain-paint: ;
+  --tw-contain-style: ;
+} /*! tailwindcss v3.4.12 | MIT License | https://tailwindcss.com*/
+*,
+:after,
+:before {
+  box-sizing: border-box;
+  border: 0 solid #e5e7eb;
+}
+:after,
+:before {
+  --tw-content: '';
+}
+:host,
+html {
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+  font-family:
+     ui-sans-serif,
+     system-ui,
+     sans-serif,
+     Apple Color Emoji,
+     Segoe UI Emoji,
+     Segoe UI Symbol,
+     Noto Color Emoji;
+  font-feature-settings: normal;
+  font-variation-settings: normal;
+  -webkit-tap-highlight-color: transparent;
+}
+body {
+  margin: 0;
+  line-height: inherit;
+}
+hr {
+  height: 0;
+  color: inherit;
+  border-top-width: 1px;
+}
+abbr:where([title]) {
+  -webkit-text-decoration: underline dotted;
+  text-decoration: underline dotted;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+b,
+strong {
+  font-weight: bolder;
+}
+code,
+kbd,
+pre,
+samp {
+  font-family:
+     ui-monospace,
+     SFMono-Regular,
+     Menlo,
+     Monaco,
+     Consolas,
+     Liberation Mono,
+     Courier New,
+     monospace;
+  font-feature-settings: normal;
+  font-variation-settings: normal;
+  font-size: 1em;
+}
+small {
+  font-size: 80%;
+}
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+sub {
+  bottom: -0.25em;
+}
+sup {
+  top: -0.5em;
+}
+table {
+  text-indent: 0;
+  border-color: inherit;
+  border-collapse: collapse;
+}
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: inherit;
+  font-feature-settings: inherit;
+  font-variation-settings: inherit;
+  font-size: 100%;
+  font-weight: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  margin: 0;
+  padding: 0;
+}
+button,
+select {
+  text-transform: none;
+}
+button,
+input:where([type='button']),
+input:where([type='reset']),
+input:where([type='submit']) {
+  -webkit-appearance: button;
+  background-color: transparent;
+  background-image: none;
+}
+:-moz-focusring {
+  outline: auto;
+}
+:-moz-ui-invalid {
+  box-shadow: none;
+}
+progress {
+  vertical-align: baseline;
+}
+::-webkit-inner-spin-button,
+::-webkit-outer-spin-button {
+  height: auto;
+}
+[type='search'] {
+  -webkit-appearance: textfield;
+  outline-offset: -2px;
+}
+::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+::-webkit-file-upload-button {
+  -webkit-appearance: button;
+  font: inherit;
+}
+summary {
+  display: list-item;
+}
+blockquote,
+dd,
+dl,
+figure,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+hr,
+p,
+pre {
+  margin: 0;
+}
+fieldset {
+  margin: 0;
+}
+fieldset,
+legend {
+  padding: 0;
+}
+menu,
+ol,
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+dialog {
+  padding: 0;
+}
+textarea {
+  resize: vertical;
+}
+input::-moz-placeholder,
+textarea::-moz-placeholder {
+  opacity: 1;
+  color: #9ca3af;
+}
+input::placeholder,
+textarea::placeholder {
+  opacity: 1;
+  color: #9ca3af;
+}
+[role='button'],
+button {
+  cursor: pointer;
+}
+:disabled {
+  cursor: default;
+}
+audio,
+canvas,
+embed,
+iframe,
+img,
+object,
+svg,
+video {
+  display: block;
+  vertical-align: middle;
+}
+img,
+video {
+  max-width: 100%;
+  height: auto;
+}
+[hidden] {
+  display: none;
+}
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+.my-4 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+.mb-6 {
+  margin-bottom: 1.5rem;
+}
+.mt-4 {
+  margin-top: 1rem;
+}
+.box-border {
+  box-sizing: border-box;
+}
+.flex {
+  display: flex;
+}
+.table {
+  display: table;
+}
+.grid {
+  display: grid;
+}
+.h-\[297mm\] {
+  height: 297mm;
+}
+.w-1\/2 {
+  width: 50%;
+}
+.w-\[210mm\] {
+  width: 210mm;
+}
+.w-\[30\%\] {
+  width: 30%;
+}
+.w-full {
+  width: 100%;
+}
+.flex-1 {
+  flex: 1 1 0%;
+}
+.grid-cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.justify-end {
+  justify-content: flex-end;
+}
+.justify-between {
+  justify-content: space-between;
+}
+.gap-5 {
+  gap: 1.25rem;
+}
+.space-y-2 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(0.5rem * (1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
+}
+.whitespace-normal {
+  white-space: normal;
+}
+.border {
+  border-width: 1px;
+}
+.border-y {
+  border-top-width: 1px;
+  border-bottom-width: 1px;
+}
+.border-y-2 {
+  border-top-width: 2px;
+  border-bottom-width: 2px;
+}
+.border-b {
+  border-bottom-width: 1px;
+}
+.border-b-2 {
+  border-bottom-width: 2px;
+}
+.border-r {
+  border-right-width: 1px;
+}
+.border-r-2 {
+  border-right-width: 2px;
+}
+.border-t {
+  border-top-width: 1px;
+}
+.border-black {
+  --tw-border-opacity: 1;
+  border-color: rgb(0 0 0 / var(--tw-border-opacity));
+}
+.border-r-black {
+  --tw-border-opacity: 1;
+  border-right-color: rgb(0 0 0 / var(--tw-border-opacity));
+}
+.p-1 {
+  padding: 0.25rem;
+}
+.p-2 {
+  padding: 0.5rem;
+}
+.p-3 {
+  padding: 0.75rem;
+}
+.px-1 {
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+}
+.px-2 {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+.px-3 {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+.px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+.py-1 {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+.py-2 {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+.py-9 {
+  padding-top: 2.25rem;
+  padding-bottom: 2.25rem;
+}
+.pb-7 {
+  padding-bottom: 1.75rem;
+}
+.pt-2 {
+  padding-top: 0.5rem;
+}
+.text-center {
+  text-align: center;
+}
+.text-start {
+  text-align: start;
+}
+.text-\[12px\] {
+  font-size: 12px;
+}
+.text-\[9px\] {
+  font-size: 9px;
+}
+.text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+.text-xs {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+.font-bold {
+  font-weight: 700;
+}
+.font-extrabold {
+  font-weight: 800;
+}
+.capitalize {
+  text-transform: capitalize;
+}
+.leading-6 {
+  line-height: 1.5rem;
+}
+
+   </style>
+</head>
+<body>
+   <div class="mx-auto h-[297mm] w-[210mm] border">
+     <div class="box-border border border-black">
+       
+       <!-- Header Section -->
+       <div class="flex justify-between border-b border-black px-3 py-1">
+         <p class="font-bold">TAX INVOICE</p>
+         <p>{{invoice.rate.date}}</p>
+       </div>
+       
+       <!-- Company and Customer Details -->
+       <div class="flex justify-between border-b border-black p-2 pb-7 leading-6">
+         <div class="w-[30%] space-y-2">
+           <p class="font-bold">{{invoice.user.companyName}}</p>
+           <p class="text-sm">{{invoice.user.address}}</p>
+         </div>
+         <!-- Customer Details -->
+         <div class="w-[30%]">
+           <p class="font-bold">{{invoice.user.companyName}}</p>
+           <p>{{invoice.customer.name}}</p>
+           <p class="text-sm">
+             {{invoice.customer.address}}
+             <br />
+             <span class="font-bold">
+               Ph: {{invoice.customer.mobileNumber}}
+             </span>
+           </p>
+         </div>
+       </div>
+       
+       <!-- Rates Table (Optional) -->
+       <div></div>
+       
+       <!-- Product Description and Rates -->
+       <div>
+         <!-- Rates Table -->
+         <table class="w-full border-b border-black py-2 text-[12px]">
+           <thead>
+             <tr>
+               <th class="whitespace-normal px-2 text-start font-bold">Date</th>
+               <th class="whitespace-normal px-2 text-start">Gold 14K</th>
+               <th class="whitespace-normal px-2 text-start">Gold 18K</th>
+               <th class="whitespace-normal px-2 text-start">Gold 22K</th>
+               <th class="whitespace-normal px-2 text-start">Gold 24K</th>
+               <th class="whitespace-normal px-2 text-start">Platinum 95</th>
+             </tr>
+           </thead>
+           <tbody>
+             <tr>
+               <td class="px-2">₹{{invoice.rate.date}}</td>
+               <td class="px-2">₹{{invoice.rate.gold14K}}</td>
+               <td class="px-2">₹{{invoice.rate.gold18K}}</td>
+               <td class="px-2">₹{{invoice.rate.gold22K}}</td>
+               <td class="px-2">₹{{invoice.rate.gold24K}}</td>
+               <td class="px-2">₹{{invoice.rate.Platinum95}}</td>
+             </tr>
+           </tbody>
+         </table>
+         
+         <!-- Products Table -->
+         <table class="w-full border-b border-black py-2 text-center text-[9px]">
+           <thead class="border-b-2 border-black">
+             <tr>
+               <th class="whitespace-normal px-3 font-extrabold">Product</th>
+               <th class="whitespace-normal px-4 font-extrabold">Purity</th>
+               <th class="whitespace-normal px-1 font-extrabold">Net Quantity</th>
+               <th class="whitespace-normal px-1 font-extrabold">Gross Weight (g)</th>
+               <th class="whitespace-normal px-1 font-extrabold">Gross Product Price</th>
+               <th class="whitespace-normal px-1 font-extrabold">Net Stone Weight (g)</th>
+               <th class="whitespace-normal px-1 font-extrabold">Stone Price</th>
+               <th class="whitespace-normal px-1 font-extrabold">
+                 Making Charge ({{invoice.products.[0].MakingCharge}}%)
+               </th>
+               <th class="whitespace-normal px-1 font-extrabold">
+                 Discount ({{invoice.products.[0].discount}}%)
+               </th>
+               <!-- <th class="px-1 whitespace-normal font-extrabold">Invoice ID</th> -->
+               <th class="whitespace-normal px-1 font-extrabold">
+                 CGST ({{invoice.products.[0].CGST}}%)
+               </th>
+               <th class="whitespace-normal px-1 font-extrabold">
+                 SGST ({{invoice.products.[0].SGST}}%)
+               </th>
+               <th class="whitespace-normal px-1 font-extrabold">Product Value</th>
+             </tr>
+           </thead>
+           <tbody>
+             {{#each invoice.products}}
+             <tr>
+               <td class="px-1 py-1 capitalize">{{this.description}}</td>
+               <td class="px-1 py-1">
+                 {{#if (startsWith this.purity "K")}}
+                   G-{{substring this.purity 1}} carat
+                 {{else}}
+                   {{this.purity}}
+                 {{/if}}
+               </td>
+               <td class="px-1 py-1">{{this.netQuantity}}N</td>
+               <td class="px-1 py-1">{{this.GrossWeight}}</td>
+               <td class="px-1 py-1">{{this.GrossProductPrice}}</td>
+               <td class="px-1 py-1">{{this.netStoneWeight}}</td>
+               <td class="px-1 py-1">{{this.stonePrice}}</td>
+               <td class="px-1 py-1">
+                 ₹{{this.MakingChargeValue}}
+               </td>
+               <td class="px-1 py-1">
+                 ₹{{this.DiscountValue}}
+               </td>
+               <td class="px-1 py-1">
+                 ₹{{this.CGSTValue}}
+               </td>
+               <td class="px-1 py-1">
+                 ₹{{this.SGSTValue}}
+               </td>
+               <td class="px-1 py-1">₹{{this.productValue}}</td>
+             </tr>
+             {{/each}}
+             <tr class="border-t border-black">
+               <td class="px-1 py-1 font-extrabold">Total</td>
+               <td class="px-1 py-1 font-extrabold"></td>
+               <td class="px-1 py-1 font-extrabold">
+                 {{sum invoice.products "netQuantity"}} N
+               </td>
+               <td class="px-1 py-1 font-extrabold">
+                 {{sum invoice.products "GrossWeight"}}
+               </td>
+               <td class="px-1 py-1 font-extrabold">
+                 ₹{{sum invoice.products "GrossProductPrice"}}
+               </td>
+               <td class="px-1 py-1 font-extrabold">
+                 {{sum invoice.products "netStoneWeight"}}
+               </td>
+               <td class="px-1 py-1 font-extrabold">
+                 ₹{{sum invoice.products "stonePrice"}}
+               </td>
+               <td class="px-1 py-1 font-extrabold">
+                 ₹{{sum invoice.products "MakingChargeValue"}}
+               </td>
+               <td class="px-1 py-1 font-extrabold">
+                 ₹{{sum invoice.products "DiscountValue"}}
+               </td>
+               <td class="px-1 py-1 font-extrabold">
+                 ₹{{sum invoice.products "CGSTValue"}}
+               </td>
+               <td class="px-1 py-1 font-extrabold">
+                 ₹{{sum invoice.products "SGSTValue"}}
+               </td>
+               <td class="px-1 py-1 font-extrabold">
+                 ₹{{sum invoice.products "productValue"}}
+               </td>
+             </tr>
+           </tbody>
+         </table>
+         
+         <!-- Final Product Sum and Amount -->
+         <div class="flex justify-end gap-5 border-b-2 border-black p-1 font-bold">
+           <p>Product total value:</p>
+           <span>₹{{invoice.totalAmount}}</span>
+         </div>
+       </div>
+       
+       <!-- Payment Details and Amount Paid -->
+       <div class="grid grid-cols-2 border-b-2 border-black">
+         <div class="border-r border-r-black">
+           <h3 class="w-full p-2 font-bold">Payment details</h3>
+           <table class="w-full">
+             <thead class="border-b border-t border-black py-9 text-xs">
+               <tr class="flex w-full justify-between">
+                 <th class="flex-1 px-2 text-start">Payment Mode</th>
+                 <th class="flex-1 px-2 text-start">Customer name</th>
+                 <th class="flex-1 px-2 text-start">Amount</th>
+               </tr>
+             </thead>
+             <tbody>
+               <tr class="flex w-full justify-between">
+                 <td class="flex-1 px-2 text-start">Cash</td>
+                 <td class="flex-1 px-2 text-start">{{invoice.customer.name}}</td>
+                 <td class="flex-1 px-2 text-start">₹{{invoice.paidAmount}}</td>
+               </tr>
+               <tr class="mt-4 flex w-full justify-between border-y-2 border-black">
+                 <td class="flex-1 px-2 text-start font-bold">Total Amount Paid</td>
+                 <td class="flex-1 px-2 text-start">₹{{invoice.paidAmount}}</td>
+               </tr>
+             </tbody>
+           </table>
+         </div>
+         <div>
+           <h3 class="w-full px-2 pt-2 font-bold">Additional Charge</h3>
+           <div class="mb-6 mt-4 flex justify-between border-y-2 border-black">
+             <p class="px-2 font-bold">Other Charges</p>
+             <p class="px-2">₹{{invoice.otherCharges}}</p>
+           </div>
+           <table class="w-full">
+             <tbody>
+               <tr>
+                 <td class="border-y border-black px-2 py-1 text-start text-sm font-bold">Total Amount</td>
+                 <td class="border-y border-black px-2 py-1 text-start text-sm">₹{{invoice.totalAmount}}</td>
+               </tr>
+               <tr>
+                 <td class="border-y border-black px-2 py-1 text-start text-sm font-bold">Total Amount Paid</td>
+                 <td class="border-y border-black px-2 py-1 text-start text-sm">₹{{invoice.paidAmount}}</td>
+               </tr>
+               <tr>
+                 <td class="px-2 py-1 text-start text-sm font-bold">Due Amount</td>
+                 <td class="px-2 py-1 text-start text-sm">₹{{invoice.dueAmount}}</td>
+               </tr>
+             </tbody>
+           </table>
+         </div>
+       </div>
+       
+       <!-- Terms and Conditions -->
+       <div class="p-2">
+         <p class="text-xs">
+           1. Please note that the net amount includes Metal Value, Cost of Stones (Precious, Non-Precious, and other material Charges), Product Making Charges/Wastage Charges, GST, and other taxes (as applicable). Upon specific request, a detailed statement will be provided.
+           <br />
+           2. Weight verified and Received product in good condition.
+           <br />
+           3. I hereby confirm the purity, weight, and value of *CN (Credit Note) & have read & accepted all terms and conditions of said CN & further acknowledge the amount stated is correct and accurate.
+           <br />
+           4. NA - Not Applicable, since the product is sold by piece/number.
+           <br />
+           5. If other (non-precious/semiprecious) materials are included in the product, the product gross weight is inclusive of other material weight.
+           <br />
+           6. The consumer can get the purity of hallmarked jewellery/artifacts verified from any of the BIS-recognised A & H centres.
+           <br />
+           7. The list of A & H recognised centres along with address & contact details is available on the website www.bis.gov.in.
+           <br />
+           8. Hallmarking Charges are Rs.45.00/- per piece.
+         </p>
+       </div>
+       <div class="border-y-2 border-black p-3 text-sm font-bold">
+         Read/Understood and agreed to the terms and conditions overleaf
+       </div>
+       
+       <!-- Signatures -->
+       <div class="flex border-b border-black">
+         <div class="w-1/2 border-r-2 border-black p-2">
+           <p><span class="font-bold">Customer Name:</span> {{invoice.customer.name}}</p>
+           <p class="font-bold my-4">Customer Signature:</p>
+         </div>
+         <div class="w-1/2 p-2">
+           <p><span class="font-bold">For:</span></p>
+           <p class="font-bold my-4">Authorized Signature:</p>
+         </div>
+       </div>
+       
+     </div>
+   </div>
+ </body>
+</html>
