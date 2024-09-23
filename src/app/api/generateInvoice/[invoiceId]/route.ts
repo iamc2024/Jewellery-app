@@ -44,6 +44,27 @@ export const GET = async (
     const template = handlers.compile(`${file}`);
 
     // Register Handlebars helpers...
+    handlers.registerHelper(
+      'startsWith',
+      function (str: string, prefix: string) {
+         if (typeof str === 'string' && typeof prefix === 'string') {
+            return str.startsWith(prefix);
+         }
+         return false;
+      },
+   );
+   handlers.registerHelper(
+      'substring',
+      function (str: string, start: number, length?: number) {
+         if (typeof str === 'string') {
+            if (length !== undefined) {
+               return str.substring(start, start + length);
+            }
+            return str.substring(start);
+         }
+         return '';
+      },
+   );
 
     const html = template({ invoice });
 
