@@ -14,10 +14,8 @@ import { useSessionContext } from './SessionContextProvider';
 import { getRemainingDays } from '@/lib/membershipUtils';
 
 const HomePage = () => {
-   
    const { userData } = useSessionContext();
-   
-   
+
    const [customer, setCustomer] = useState<Customer | null>(null);
    const {
       data: rates,
@@ -45,7 +43,8 @@ const HomePage = () => {
    return (
       <div className="min-h-screen w-full space-y-5">
          <RateComponent rates={rates} />
-         {userData.isMember && rates || (rates && userData.invoiceCount < 5 )? (
+
+         {rates && ((userData.invoiceCount < 5 || userData.isMember) ? (
             <>
                <NewInvoiceDialog setCustomer={setCustomer} />
                <InvoiceForm
@@ -53,14 +52,14 @@ const HomePage = () => {
                   customer={customer}
                   rates={rates}
                   setCustomer={setCustomer}
-                  isMember = {userData.isMember}
+                  isMember={userData.isMember}
                />
             </>
          ) : (
             <div className="text-center text-destructive">
                You have reached the limit of free invoices
             </div>
-         )}
+         ))}
       </div>
    );
 };

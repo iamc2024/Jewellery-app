@@ -27,6 +27,7 @@ model User {
   sessions     Session[]
   Customers    Customer[]
   Invoices     Invoice[]
+  Rates        Rate[]
   invoiceCount Int       @default(0)
 
     isMember     Boolean    @default(false)
@@ -119,6 +120,8 @@ model Rate {
   gold22K    Float
   gold24K    Float
   Platinum95 Float
+  adminId    String
+  user       User     @relation(fields: [adminId], references: [id], onDelete: Cascade)
 
   invoices Invoice[]
 
