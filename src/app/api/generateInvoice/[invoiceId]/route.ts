@@ -4,6 +4,7 @@ import fs from 'fs';
 import path from 'path'; // Import path
 import handlers from 'handlebars';
 import { NextResponse } from 'next/server';
+import chromium from 'chrome-aws-lambda';
 import puppeteer from 'puppeteer-core';
 
 export const GET = async (
@@ -95,9 +96,10 @@ export const GET = async (
     const isProduction = process.env.NODE_ENV === 'production';
 
     const browser = await puppeteer.launch({
-      executablePath: isProduction ? '/usr/bin/chromium' : undefined, // Let Puppeteer choose locally
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-      headless: true,
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await chromium.executablePath,
+      headless: chromium.headless,
     });
     
         const page = await browser.newPage();
