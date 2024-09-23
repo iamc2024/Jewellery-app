@@ -40,28 +40,10 @@ const Rate = ({ rates }: RateProps) => {
       Platinum95: '',
     },
   });
-
   useEffect(() => {
-    const fetchDate = async () => {
-      try {
-    
-        const response = await fetch('https://worldtimeapi.org/api/timezone/Asia/Kolkata');
-        const data = await response.json();
-        const utcDate = data.datetime; //
-
-        
-        const dateOnly = utcDate.split('T')[0]; 
-
-        setCurrentDate(dateOnly);
-        
-        form.setValue('date', dateOnly);
-      } catch (err) {
-        console.error('Error fetching date:', err);
-        setError('Failed to fetch the current date. Please try again.');
-      }
-    };
-
-    fetchDate();
+    const currentDate = new Date().toISOString().split('T')[0];
+    setCurrentDate(currentDate);
+    form.setValue('date', currentDate);
   }, [form]);
 
   
