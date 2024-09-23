@@ -15,10 +15,8 @@ export const submitRates = async ({ rates }: SubmitRatesProps) => {
          throw new Error('Unauthorized');
       }
 
-      
       const validatedRates = rateSchema.parse(rates);
 
-      
       const createdRate = await prisma.rate.create({
          data: {
             date: validatedRates.date,
@@ -26,7 +24,12 @@ export const submitRates = async ({ rates }: SubmitRatesProps) => {
             gold18K: parseFloat(validatedRates.gold18K),
             gold22K: parseFloat(validatedRates.gold22K),
             gold24K: parseFloat(validatedRates.gold24K),
-            Platinum95: parseFloat(validatedRates.Platinum95)
+            Platinum95: parseFloat(validatedRates.Platinum95),
+            user: {
+               connect: {
+                  id: user.id,
+               },
+            },
          },
       });
 
