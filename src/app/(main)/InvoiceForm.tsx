@@ -44,12 +44,10 @@ const InvoiceForm = ({
 }: InvoiceFormProps) => {
    const [error, setError] = useState<string>();
    const [isPending, startTransition] = useTransition();
-   const [pdfUrl, setPdfUrl] = useState<string | null>(null); //
    const [invoice, setInvoice] = useState<InvoicePrintData | null>(null);
    const [isSubmitting, setIsSubmitting] = useState(false);
    const [invoiceCount, setInvoiceCount] = useState(0);
    const [customer, setCustomer] = useState<Customer | null>(null);
-   const router = useRouter();
 
    const purityOptions = [
       { label: '14K', value: 'K14' },
@@ -237,7 +235,6 @@ const InvoiceForm = ({
 
    const onSubmit = (invoice: InvoiceValues) => {
       setError(undefined);
-      setPdfUrl(null);
       setIsSubmitting(true);
 
       startTransition(async () => {
@@ -301,16 +298,7 @@ const InvoiceForm = ({
       });
    };
 
-   const handlePrintInvoice = () => {
-      if (pdfUrl) {
-         const link = document.createElement('a');
-         link.href = pdfUrl;
-         link.download = 'invoice.pdf';
-         link.click();
-         URL.revokeObjectURL(pdfUrl);
-         setPdfUrl(null);
-      }
-   };
+
 
    return (
       <div className="rounded-md border border-gray-200 p-5 shadow-sm space-y-4">
@@ -326,7 +314,6 @@ const InvoiceForm = ({
                   <p className="text-center text-sm text-red-600">{error}</p>
                )}
 
-               {/* Error Summary */}
 
                {/* Customer Fields with Small Labels and Placeholders */}
                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">

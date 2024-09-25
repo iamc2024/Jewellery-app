@@ -15,6 +15,7 @@ import type { InvoiceData } from '@/lib/types';
 import { Download } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
+import InvoiceDownlaodButton from './InvoiceDownlaodButton';
 
 interface InvoicesTableProps {
    invoices: InvoiceData[];
@@ -29,32 +30,6 @@ const InvoicesTable = ({
    hasNextPage,
    isFetchingNextPage,
 }: InvoicesTableProps) => {
-
-    const [isDownloading, setIsDownloading] = useState<string | null>(null); // Track downloading per invoice
-
-    const handleDownloadInvoice = async (invoiceId: string) => {
-        setIsDownloading(invoiceId);
-        try {
-          const response = await kyInstance.get(`/api/generateInvoice/${invoiceId}`);
-    
-          if (!response.ok) {
-            throw new Error('Failed to generate PDF');
-          }
-    
-          const generateInvoice = await response.arrayBuffer();
-          const blob = new Blob([generateInvoice], { type: 'application/pdf' });
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = `invoice-${invoiceId}.pdf`;
-          a.click();
-          window.URL.revokeObjectURL(url);
-        } catch (error) {
-          console.error(error);
-        } finally {
-          setIsDownloading(null);
-        }
-      };
 
    return (
       <div className="w-full bg-card">
@@ -85,22 +60,7 @@ const InvoicesTable = ({
                      <TableCell className='text-xs sm:text-base'>{invoice.totalAmount}</TableCell>
                      <TableCell className='hidden sm:inline-block'>{invoice.paidAmount}</TableCell>
                      <TableCell className="text-right">
-                        <LoadingButton 
-                        variant={'outline'} 
-                        className='text-xs px-2 hidden sm:inline-block'
-                        loading={isDownloading === invoice.id}
-                        onClick={() => handleDownloadInvoice(invoice.id)}
-                        >
-                           Download
-                        </LoadingButton>
-                        <LoadingButton 
-                        variant={'outline'} 
-                        className='text-xs px-2 inline-block sm:hidden'
-                        loading={isDownloading === invoice.id}
-                        onClick={() => handleDownloadInvoice(invoice.id)}
-                        >
-                           <Download size={16} className='mr-1' /> 
-                        </LoadingButton>
+                        <InvoiceDownlaodButton invoiceId={invoice.id} />
                      </TableCell>
                   </TableRow>
                ))}

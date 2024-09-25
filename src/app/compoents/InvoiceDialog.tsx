@@ -11,14 +11,7 @@ interface InvoiceDialoagProps {
 }
 
 const InvoiceDialoag = ({ invoice, setInvoice }: InvoiceDialoagProps) => {
-//   const [html2pdf, setHtml2pdf] = useState<any>(null);
 
-//   useEffect(() => {
-//     // Dynamically import html2pdf.js only on the client side
-//     import('html2pdf.js').then((module) => {
-//       setHtml2pdf(module.default);
-//     });
-//   }, []);
 
   const handleClick = () => {
     if (!html2pdf) return;
