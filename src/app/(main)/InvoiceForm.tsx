@@ -16,13 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import LoadingButton from '@/components/LoadingButton';
 import type { Customer, Rate } from '@prisma/client';
-import {
-   productSchema,
-   invoiceSchema,
-   InvoiceValues,
-   ProductValues,
-   Purity,
-} from '@/lib/validation';
+import { invoiceSchema, InvoiceValues, Purity } from '@/lib/validation';
 import { createInvoice } from './action';
 import kyInstance from '@/lib/ky';
 import {
@@ -32,29 +26,30 @@ import {
    SelectItem,
    SelectValue,
 } from '@/components/ui/select';
-import { undefined as zodUndefined } from 'zod';
+import { useRouter } from 'next/navigation';
+import InvoiceDialoag from '../compoents/InvoiceDialog';
+import type { InvoicePrintData } from '@/lib/types';
 
 interface InvoiceFormProps {
-   customer: Customer | null;
    rates: Rate;
-   setCustomer: (customer: Customer | null) => void;
    invoiceCount: number;
    isMember: boolean;
 }
 
 const InvoiceForm = ({
-   customer,
    rates,
-   setCustomer,
+
    invoiceCount: invoiceC,
    isMember,
 }: InvoiceFormProps) => {
    const [error, setError] = useState<string>();
    const [isPending, startTransition] = useTransition();
    const [pdfUrl, setPdfUrl] = useState<string | null>(null); //
-   const printButtonRef = useRef<HTMLButtonElement>(null);
+   const [invoice, setInvoice] = useState<InvoicePrintData | null>(null);
    const [isSubmitting, setIsSubmitting] = useState(false);
    const [invoiceCount, setInvoiceCount] = useState(0);
+   const [customer, setCustomer] = useState<Customer | null>(null);
+   const router = useRouter();
 
    const purityOptions = [
       { label: '14K', value: 'K14' },
@@ -77,29 +72,29 @@ const InvoiceForm = ({
       defaultValues: {
          customerId: customer?.id || '',
          rateId: rates.id,
-         totalAmount: 0, 
-         paidAmount: undefined, 
-         dueAmount: 0, 
-         
+         totalAmount: 0,
+         paidAmount: 0,
+         dueAmount: 0,
+
          customerName: customer?.name || '',
          customerPhone: customer?.mobileNumber || '',
          customerAddress: customer?.address || '',
          products: [
             {
                description: '',
-               purity: '' as Purity, 
-               netQuantity: undefined, 
-               GrossWeight: undefined, 
-               netStoneWeight: undefined, 
-               stonePrice: undefined, 
-               GrossProductPrice: undefined, 
-               MakingCharge: undefined, 
-               discount: undefined, 
-               CGST: 1.5, 
-               SGST: 1.5, 
-               productValue: undefined, 
-               CGSTAmount: undefined, 
-               SGSTAmount: undefined, 
+               purity: '' as Purity,
+               netQuantity: undefined,
+               GrossWeight: undefined,
+               netStoneWeight: undefined,
+               stonePrice: undefined,
+               GrossProductPrice: undefined,
+               MakingCharge: undefined,
+               discount: undefined,
+               CGST: 1.5,
+               SGST: 1.5,
+               productValue: undefined,
+               CGSTAmount: undefined,
+               SGSTAmount: undefined,
             },
          ],
       },
@@ -111,7 +106,6 @@ const InvoiceForm = ({
       name: 'products',
    });
 
-   
    const watchProducts = useWatch({
       control: form.control,
       name: 'products',
@@ -120,7 +114,6 @@ const InvoiceForm = ({
    const prevCustomerRef = useRef<Customer | null>(customer);
 
    useEffect(() => {
-      
       if (
          customer &&
          customer.id !== prevCustomerRef.current?.id &&
@@ -135,16 +128,14 @@ const InvoiceForm = ({
          });
       }
 
-      
       prevCustomerRef.current = customer;
-   }, [customer, form, isSubmitting]);
+   }, [customer, form, isSubmitting, invoice]);
 
    useEffect(() => {
-      
       let totalAmount = 0;
 
       watchProducts.forEach((product, index) => {
-         const purity = product?.purity || ''; 
+         const purity = product?.purity || '';
          const rate = rateMap[purity] || 0;
 
          const GrossWeight = product?.GrossWeight || 0;
@@ -156,31 +147,30 @@ const InvoiceForm = ({
 
          const GrossProductPrice = metalPrice + stonePrice;
 
-         
          const discountPercentage = product?.discount || 0;
          const discountAmount = (GrossProductPrice * discountPercentage) / 100;
 
-         
          const priceAfterDiscount = GrossProductPrice - discountAmount;
 
-         
          const MakingChargePercentage = product?.MakingCharge || 0;
          const MakingChargeAmount =
             (priceAfterDiscount * MakingChargePercentage) / 100;
 
-         
          const priceAfterMakingCharge = priceAfterDiscount + MakingChargeAmount;
 
-         
          const CGSTPercentage = product?.CGST || 0;
          const SGSTPercentage = product?.SGST || 0;
-         const CGSTAmount = (priceAfterMakingCharge * CGSTPercentage) / 100;
-         const SGSTAmount = (priceAfterMakingCharge * SGSTPercentage) / 100;
+         const CGSTAmount = parseFloat(
+            ((priceAfterMakingCharge * CGSTPercentage) / 100).toFixed(2),
+         );
+         const SGSTAmount = parseFloat(
+            ((priceAfterMakingCharge * SGSTPercentage) / 100).toFixed(2),
+         );
 
-         
-         const productValue = priceAfterMakingCharge + CGSTAmount + SGSTAmount;
+         const productValue = parseFloat(
+            (priceAfterMakingCharge + CGSTAmount + SGSTAmount).toFixed(2),
+         );
 
-         
          if (
             product.GrossProductPrice !== GrossProductPrice ||
             product.productValue !== productValue ||
@@ -212,7 +202,6 @@ const InvoiceForm = ({
          totalAmount += productValue;
       });
 
-      
       const currentTotalAmount = form.getValues('totalAmount') || 0;
 
       if (currentTotalAmount !== totalAmount) {
@@ -231,7 +220,6 @@ const InvoiceForm = ({
       }
    }, [watchProducts, form, rateMap]);
 
-   
    const watchPaidAmount = useWatch({
       control: form.control,
       name: 'paidAmount',
@@ -248,9 +236,8 @@ const InvoiceForm = ({
    }, [watchPaidAmount, form]);
 
    const onSubmit = (invoice: InvoiceValues) => {
-      console.log('submit button clicked');
       setError(undefined);
-      setPdfUrl(null); 
+      setPdfUrl(null);
       setIsSubmitting(true);
 
       startTransition(async () => {
@@ -273,7 +260,7 @@ const InvoiceForm = ({
                   products: [
                      {
                         description: '',
-                        purity: '' as Purity, 
+                        purity: '' as Purity,
                         netQuantity: 0,
                         GrossWeight: 0,
                         netStoneWeight: 0,
@@ -281,8 +268,8 @@ const InvoiceForm = ({
                         GrossProductPrice: 0,
                         MakingCharge: 0,
                         discount: 0,
-                        CGST: 1.5, 
-                        SGST: 1.5, 
+                        CGST: 1.5,
+                        SGST: 1.5,
                         productValue: 0,
                         CGSTAmount: 0,
                         SGSTAmount: 0,
@@ -290,21 +277,20 @@ const InvoiceForm = ({
                   ],
                });
 
-               
-               const response = await kyInstance.get(
-                  `/api/generateInvoice/${createdInvoice.id}`,
-               );
+               const fetchedInvoice = await kyInstance
+                  .get(`/api/generateInvoice/${createdInvoice.id}`)
+                  .json<InvoicePrintData>();
 
-               if (!response.ok) {
-                  throw new Error('Failed to generate PDF');
+               if (fetchedInvoice) {
+                  setInvoice(fetchedInvoice);
                }
 
-               const generateInvoice = await response.arrayBuffer();
-               const blob = new Blob([generateInvoice], {
-                  type: 'application/pdf',
-               });
-               const url = URL.createObjectURL(blob);
-               setPdfUrl(url); 
+               // const generateInvoice = await response.arrayBuffer();
+               // const blob = new Blob([generateInvoice], {
+               //    type: 'application/pdf',
+               // });
+               // const url = URL.createObjectURL(blob);
+               // setPdfUrl(url);
             }
          } catch (error) {
             console.error(error);
@@ -315,26 +301,25 @@ const InvoiceForm = ({
       });
    };
 
-   
    const handlePrintInvoice = () => {
       if (pdfUrl) {
-         
          const link = document.createElement('a');
          link.href = pdfUrl;
          link.download = 'invoice.pdf';
          link.click();
-         URL.revokeObjectURL(pdfUrl); 
-         setPdfUrl(null); 
+         URL.revokeObjectURL(pdfUrl);
+         setPdfUrl(null);
       }
    };
 
    return (
-      <div className="rounded-md border border-gray-200 p-5 shadow-sm">
+      <div className="rounded-md border border-gray-200 p-5 shadow-sm space-y-4">
          {!isMember && (
             <div className="text-destructive">
                {5 - (invoiceCount || invoiceC)} free invoices left
             </div>
          )}
+         <NewInvoiceDialog setCustomer={setCustomer} />
          <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                {error && (
@@ -342,22 +327,6 @@ const InvoiceForm = ({
                )}
 
                {/* Error Summary */}
-               {Object.keys(form.formState.errors).length > 0 && (
-                  <div className="mb-4 rounded bg-red-100 p-3 text-sm text-red-700">
-                     <h4 className="font-semibold">
-                        Please fix the following errors:
-                     </h4>
-                     <ul className="list-inside list-disc">
-                        {Object.entries(form.formState.errors).map(
-                           ([field, error]) => (
-                              <li key={field}>
-                                 {field}: {error?.message}
-                              </li>
-                           ),
-                        )}
-                     </ul>
-                  </div>
-               )}
 
                {/* Customer Fields with Small Labels and Placeholders */}
                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
@@ -843,7 +812,7 @@ const InvoiceForm = ({
                   onClick={() =>
                      append({
                         description: '',
-                        purity: '' as Purity, 
+                        purity: '' as Purity,
                         netQuantity: 0,
                         GrossWeight: 0,
                         netStoneWeight: 0,
@@ -851,8 +820,8 @@ const InvoiceForm = ({
                         GrossProductPrice: 0,
                         MakingCharge: 0,
                         discount: 0,
-                        CGST: 1.5, 
-                        SGST: 1.5, 
+                        CGST: 1.5,
+                        SGST: 1.5,
                         productValue: 0,
                         CGSTAmount: 0,
                         SGSTAmount: 0,
@@ -943,20 +912,65 @@ const InvoiceForm = ({
                      Create Invoice
                   </LoadingButton>
 
-                  <Button
-                     ref={printButtonRef}
-                     className="w-full text-sm"
-                     onClick={handlePrintInvoice}
-                     disabled={!pdfUrl} 
-                  >
-                     Print Invoice
-                  </Button>
+                  <InvoiceDialoag invoice={invoice} setInvoice={setInvoice} />
                </div>
 
                <DevTool control={form.control} />
             </form>
          </Form>
       </div>
+   );
+};
+
+interface NewInvoiceDialogProps {
+   setCustomer: (customer: Customer) => void;
+}
+
+const NewInvoiceDialog = ({ setCustomer }: NewInvoiceDialogProps) => {
+   const [isPending, startTransaction] = useTransition();
+   const [error, setError] = useState<string>();
+
+   const [mobileNumber, setMobileNumber] = useState('');
+
+   const handleSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+
+      startTransaction(async () => {
+         try {
+            const customer = await kyInstance
+               .post('/api/customers/search', { json: { mobileNumber } })
+               .json<Customer>();
+            setCustomer(customer);
+            setMobileNumber('');
+         } catch (error) {
+            console.error(error);
+            setError('Customer not found');
+            setTimeout(() => {
+               setError(undefined);
+            }, 3000);
+         }
+      });
+   };
+
+   return (
+      <>
+         {error && <p className="text-center text-destructive">{error}</p>}
+
+         <form
+            onSubmit={handleSubmit}
+            className="mx-auto flex items-center gap-3 bg-card"
+         >
+            <Input
+               className=""
+               placeholder="Mobile Number"
+               value={mobileNumber}
+               onChange={(e) => setMobileNumber(e.target.value)}
+            />
+            <LoadingButton loading={isPending} type="submit">
+               Add Invoice
+            </LoadingButton>
+         </form>
+      </>
    );
 };
 

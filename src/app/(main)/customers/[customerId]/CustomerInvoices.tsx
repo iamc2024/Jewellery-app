@@ -46,7 +46,6 @@ const CustomerInvoice = ({ params: { customerId } }: PageProps) => {
         const res = await kyInstance
           .get(`/api/customers/${customerId}`)
           .json<{ customer: Customer; invoices: Invoice[] }>();
-        console.log(res);
         setCustomer(res.customer);
         setInvoices(res.invoices);
       } catch (error) {

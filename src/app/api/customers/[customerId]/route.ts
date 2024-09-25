@@ -35,7 +35,6 @@ export const GET = async (
             dueAmount: invoice.dueAmount,
             createdAt: invoice.createdAt,
         }));
-        console.log(invoices)
 
         const response = {
             customer: {

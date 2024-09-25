@@ -1,65 +1,62 @@
-'use client';
 
-import { Button } from '@/components/ui/button';
-import NewInvoiceDialog from './NewInvoiceDialog';
-import { useState } from 'react';
-import type { Customer, Rate } from '@prisma/client';
+
+import type {  Rate as RateType } from '@prisma/client';
 import InvoiceForm from './InvoiceForm';
 import RateComponent from './rates/Rate';
 import { formatDate } from '@/lib/fomatDate';
-import { useQuery } from '@tanstack/react-query';
+
 import kyInstance from '@/lib/ky';
-import { Loader2 } from 'lucide-react';
-import { useSessionContext } from './SessionContextProvider';
-import { getRemainingDays } from '@/lib/membershipUtils';
+import prisma from '@/lib/prisma';
+import { validateRequest } from '@/auth';
 
-const HomePage = () => {
-   const { userData } = useSessionContext();
 
-   const [customer, setCustomer] = useState<Customer | null>(null);
-   const {
-      data: rates,
-      isLoading,
-      isError,
-      error,
-   } = useQuery({
-      queryKey: ['rates'],
-      queryFn: async () => {
-         const fetchedRates = await kyInstance
-            .get(`/api/rate/${formatDate(new Date())}`)
-            .json<Rate>();
-         return fetchedRates;
+const HomePage = async () => {
+   const {user} = await validateRequest();
+   if(!user) return {}
+
+   const [rate, userData]:[RateType | null, {isMember: boolean, invoiceCount: number} | null] = await prisma.$transaction([
+      prisma.rate.findFirst({
+      where: {
+         date: formatDate(new Date()),
+         adminId: user.id,
       },
-      retry: 0,
-   });
-   if (isLoading) {
-      return (
-         <div className="min-h-screen w-full">
-            <Loader2 className="mx-auto my-3 animate-spin" />
-         </div>
-      );
-   }
+      }),
+      prisma.user.findFirst({
+      where: {
+         id: user.id,
+      },
+      select: {
+         invoiceCount: true,
+         isMember: true,
+      },
+      }),
+   ]);
+   if(!rate || !userData) return {}
+
+
+   // const url = `/api/rate/${formatDate(new Date())}`
+   // console.log('this is url', url)
+   // const initialRatesAndUserData = await kyInstance
+   //    .get(`/api/rate/${formatDate(new Date())}`)
+   //    .json<{rate: RateType, userData: {isMember: boolean, invoiceCount: number}}>();
 
    return (
       <div className="min-h-screen w-full space-y-5">
-         <RateComponent rates={rates} />
+         <RateComponent rate={rate} />
 
-         {rates && ((userData.invoiceCount < 5 || userData.isMember) ? (
-            <>
-               <NewInvoiceDialog setCustomer={setCustomer} />
-               <InvoiceForm
-                  invoiceCount={userData.invoiceCount}
-                  customer={customer}
-                  rates={rates}
-                  setCustomer={setCustomer}
-                  isMember={userData.isMember}
-               />
-            </>
-         ) : (
-            <div className="text-center text-destructive">
-               You have reached the limit of free invoices
-            </div>
-         ))}
+         {userData.invoiceCount < 15 || userData.isMember ? (
+               <>
+                  <InvoiceForm
+                     invoiceCount={userData.invoiceCount}
+                     rates={rate}
+                     isMember={userData.isMember}
+                  />
+               </>
+            ) : (
+               <div className="text-center text-destructive">
+                  You have reached the limit of free invoices
+               </div>
+            )}
       </div>
    );
 };

@@ -22,7 +22,6 @@ export const GET = async (req: NextRequest) => {
             customer: true,
          },
       });
-      console.log(invoices);
 
       const nextCursor =
          invoices.length > pageSize ? invoices[pageSize].id : null;

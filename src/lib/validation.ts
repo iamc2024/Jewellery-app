@@ -39,22 +39,21 @@ export enum Purity {
 }
 
 export const productSchema = z.object({
-   description: z.string(),
-   purity: z.nativeEnum(Purity),
-   netQuantity: z.preprocess((a) => Number(a), z.number().nonnegative()),
-   GrossWeight: z.preprocess((a) => Number(a), z.number().nonnegative()),
-   netStoneWeight: z.preprocess((a) => Number(a), z.number().nonnegative()),
-   stonePrice: z.preprocess((a) => Number(a), z.number().nonnegative()),
-   GrossProductPrice: z.preprocess((a) => Number(a), z.number().nonnegative()),
-   MakingCharge: z.preprocess((a) => Number(a), z.number().nonnegative()),
-   discount: z.preprocess((a) => Number(a), z.number().min(0).max(100)),
-   CGST: z.preprocess((a) => Number(a), z.number().nonnegative()),
-   SGST: z.preprocess((a) => Number(a), z.number().nonnegative()),
-   CGSTAmount: z.preprocess((a) => Number(a), z.number().nonnegative()),
-   SGSTAmount: z.preprocess((a) => Number(a), z.number().nonnegative()),
-   productValue: z.preprocess((a) => Number(a), z.number().nonnegative()),
-   
- });
+   description: z.string().min(1, 'Required'),
+   purity: z.nativeEnum(Purity, { errorMap: () => ({ message: 'cannot be negative' }) }),
+   netQuantity: z.preprocess((a) => Number(a), z.number().nonnegative('cannot be negative')),
+   GrossWeight: z.preprocess((a) => Number(a), z.number().nonnegative('cannot be negative')),
+   netStoneWeight: z.preprocess((a) => Number(a), z.number().nonnegative('cannot be negative')),
+   stonePrice: z.preprocess((a) => Number(a), z.number().nonnegative('cannot be negative')),
+   GrossProductPrice: z.preprocess((a) => Number(a), z.number().nonnegative('cannot be negative')),
+   MakingCharge: z.preprocess((a) => Number(a), z.number().nonnegative('cannot be negative')),
+   discount: z.preprocess((a) => Number(a), z.number().min(0).max(100, 'cannot be negative')),
+   CGST: z.preprocess((a) => Number(a), z.number().nonnegative('cannot be negative')),
+   SGST: z.preprocess((a) => Number(a), z.number().nonnegative('cannot be negative')),
+   CGSTAmount: z.preprocess((a) => Number(a), z.number().nonnegative('cannot be negative')),
+   SGSTAmount: z.preprocess((a) => Number(a), z.number().nonnegative('cannot be negative')),
+   productValue: z.preprocess((a) => Number(a), z.number().nonnegative('cannot be negative')),
+});
  
 
 export type ProductValues = z.infer<typeof productSchema>;
@@ -64,7 +63,7 @@ export const invoiceSchema = z.object({
    customerId: z.string(),
    rateId: z.string(),
    totalAmount: z.preprocess((a) => Number(a), z.number().nonnegative()),
-   paidAmount: z.preprocess((a) => Number(a), z.number().nonnegative()),
+   paidAmount: z.preprocess((a) => Number(a), z.number().nonnegative({ message: 'Invalid amount' })),
    dueAmount: z.preprocess((a) => Number(a), z.number().nonnegative()),
    customerName: z.string().min(1, 'Required'),
    customerPhone: z.string().regex(/^\d{10}$/, 'Invalid phone number'),

@@ -19,13 +19,24 @@ export const GET = async (
             status: 400,
          });
       }
-
-      const rate = await prisma.rate.findFirst({
+      const [rate, userData] = await prisma.$transaction([
+         prisma.rate.findFirst({
          where: {
             date: date,
             adminId: user.id,
          },
-      });
+         }),
+         prisma.user.findFirst({
+         where: {
+            id: user.id,
+         },
+         select: {
+            invoiceCount: true,
+            isMember: true,
+         },
+         }),
+      ]);
+
 
       if (!rate) {
          return new Response(
@@ -34,7 +45,7 @@ export const GET = async (
          );
       }
 
-      return new Response(JSON.stringify(rate));
+      return new Response(JSON.stringify({rate, userData}));
    } catch (error) {
       console.error(error);
       return new Response(JSON.stringify({ error: 'Internal server error' }), {

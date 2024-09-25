@@ -46,7 +46,6 @@ function Payment() {
   
   const [selectedPlan, setSelectedPlan] = useState(subscriptionPlans[0]); 
   const [loading, setLoading] = useState(false);
-  console.log(selectedPlan.price)
 
   const createOrderId = async () => {
     try {

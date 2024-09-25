@@ -26,7 +26,7 @@ export const createInvoice = async ({ invoice }: CreateInvoiceProps) => {
          throw new Error('User not found');
       }
 
-      if(!userData.isMember && userData.invoiceCount >= 5) {
+      if(!userData.isMember && userData.invoiceCount >= 15) {
          throw new Error('You have reached the limit of free invoices');
       }
       
