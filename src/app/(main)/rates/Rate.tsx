@@ -31,7 +31,7 @@ const Rate = ({ rate: rates }: RateProps) => {
 
    const [error, setError] = useState<string>();
    const [currentDate, setCurrentDate] = useState<string>('');
-   const [rateData, setRateData] = useState<Rate | undefined>(rates);
+   const [rateData, setRateData] = useState<Rate | null>(rates);
 
    const queryClient = useQueryClient();
 
