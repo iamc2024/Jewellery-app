@@ -12,7 +12,7 @@ import { validateRequest } from '@/auth';
 
 const HomePage = async () => {
    const {user} = await validateRequest();
-   if(!user) return {}
+   if(!user) throw new Error('unauthorized');
 
    const [rate, userData]:[RateType | null, {isMember: boolean, invoiceCount: number} | null] = await prisma.$transaction([
       prisma.rate.findFirst({
@@ -31,7 +31,9 @@ const HomePage = async () => {
       },
       }),
    ]);
-   if(!rate || !userData) return {}
+
+   if(!userData) throw new Error('User not found');
+   
 
 
    // const url = `/api/rate/${formatDate(new Date())}`
@@ -44,7 +46,7 @@ const HomePage = async () => {
       <div className="min-h-screen w-full space-y-5">
          <RateComponent rate={rate} />
 
-         {userData.invoiceCount < 5 || userData.isMember ? (
+         {(userData.invoiceCount < 5 || userData.isMember ) && rate  ? (
                <>
                   <InvoiceForm
                      invoiceCount={userData.invoiceCount}

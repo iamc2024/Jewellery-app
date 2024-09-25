@@ -11,7 +11,6 @@ const MainLayout = async ({ children }: { children: React.ReactNode }) => {
    if (!session.user) {
       redirect('/login');
    }
-   
 
    const userData = await prisma.user.findUnique({
       where: {
@@ -21,6 +20,7 @@ const MainLayout = async ({ children }: { children: React.ReactNode }) => {
    if(!userData) {
       redirect('/login');
    }
+
 
    const sessionContextValue = {
       user: session.user,

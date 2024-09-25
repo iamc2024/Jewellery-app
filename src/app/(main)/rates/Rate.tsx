@@ -23,10 +23,12 @@ import { rateSchema, type RateValues } from '@/lib/validation';
 import { submitRates } from './action';
 
 interface RateProps {
-   rate: Rate | undefined;
+   rate: Rate | null;
 }
 
 const Rate = ({ rate: rates }: RateProps) => {
+
+
    const [error, setError] = useState<string>();
    const [currentDate, setCurrentDate] = useState<string>('');
    const [rateData, setRateData] = useState<Rate | undefined>(rates);
