@@ -1,20 +1,15 @@
-import LoadingButton from '@/components/LoadingButton';
 import { Button } from '@/components/ui/button';
 import {
    Table,
    TableBody,
-   TableCaption,
    TableCell,
    TableHead,
    TableHeader,
    TableRow,
 } from '@/components/ui/table';
-import kyInstance from '@/lib/ky';
 
 import type { InvoiceData } from '@/lib/types';
-import { Download } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
 import InvoiceDownlaodButton from './InvoiceDownlaodButton';
 
 interface InvoicesTableProps {
@@ -47,15 +42,15 @@ const InvoicesTable = ({
             <TableBody>
                {invoices.map((invoice) => (
                   <TableRow key={invoice.id}>
-                     <TableCell className=" text-xs sm:text-base font-bold cursor-pointer capitalize text-blue-800">
                         <Link
                            href={`/customers/${invoice.customerId}`}
                            key={invoice.id}
                            className="hover:underline"
                         >
+                     <TableCell className=" text-xs sm:text-base font-bold cursor-pointer capitalize text-blue-800">
                            {invoice.customer.name}
-                        </Link>
                      </TableCell>
+                        </Link>
                      <TableCell className='text-xs sm:text-base'>{new Date(invoice.createdAt).toLocaleDateString()}</TableCell>
                      <TableCell className='text-xs sm:text-base'>{invoice.totalAmount}</TableCell>
                      <TableCell className='hidden sm:inline-block'>{invoice.paidAmount}</TableCell>
