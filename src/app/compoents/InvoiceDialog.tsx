@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import type { InvoicePrintData } from '@/lib/types';
+import html2pdf from 'html2pdf.js';
 
 interface InvoiceDialoagProps {
   invoice: InvoicePrintData | null;
@@ -10,14 +11,14 @@ interface InvoiceDialoagProps {
 }
 
 const InvoiceDialoag = ({ invoice, setInvoice }: InvoiceDialoagProps) => {
-  const [html2pdf, setHtml2pdf] = useState<any>(null);
+//   const [html2pdf, setHtml2pdf] = useState<any>(null);
 
-  useEffect(() => {
-    // Dynamically import html2pdf.js only on the client side
-    import('html2pdf.js').then((module) => {
-      setHtml2pdf(module.default);
-    });
-  }, []);
+//   useEffect(() => {
+//     // Dynamically import html2pdf.js only on the client side
+//     import('html2pdf.js').then((module) => {
+//       setHtml2pdf(module.default);
+//     });
+//   }, []);
 
   const handleClick = () => {
     if (!html2pdf) return;

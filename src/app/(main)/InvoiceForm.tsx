@@ -129,7 +129,7 @@ const InvoiceForm = ({
       }
 
       prevCustomerRef.current = customer;
-   }, [customer, form, isSubmitting, invoice]);
+   }, [customer, form, isSubmitting]);
 
    useEffect(() => {
       let totalAmount = 0;
