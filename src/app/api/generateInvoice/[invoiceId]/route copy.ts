@@ -1,5 +1,8 @@
 // src/app/api/generateInvoice/[invoiceId]/route.js
 
+
+/*
+
 import { validateRequest } from '@/auth';
 import prisma from '@/lib/prisma';
 import fs from 'fs';

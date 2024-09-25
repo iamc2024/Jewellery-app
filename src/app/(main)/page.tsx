@@ -44,7 +44,7 @@ const HomePage = async () => {
       <div className="min-h-screen w-full space-y-5">
          <RateComponent rate={rate} />
 
-         {userData.invoiceCount < 15 || userData.isMember ? (
+         {userData.invoiceCount < 5 || userData.isMember ? (
                <>
                   <InvoiceForm
                      invoiceCount={userData.invoiceCount}
