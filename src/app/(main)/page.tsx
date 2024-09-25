@@ -44,23 +44,26 @@ const HomePage = async () => {
 
    return (
       <div className="min-h-screen w-full space-y-5">
-         <RateComponent rate={rate} />
-
-         {(userData.invoiceCount < 5 || userData.isMember ) && rate  ? (
-               <>
-                  <InvoiceForm
-                     invoiceCount={userData.invoiceCount}
-                     rates={rate}
-                     isMember={userData.isMember}
-                  />
-               </>
-            ) : (
-               <div className="text-center text-destructive">
-                  You have reached the limit of free invoices
-               </div>
-            )}
-      </div>
+      <RateComponent rate={rate} />
+    
+      {rate ? (
+        (userData.invoiceCount < 5 || userData.isMember) ? (
+          <InvoiceForm
+            invoiceCount={userData.invoiceCount}
+            rates={rate}
+            isMember={userData.isMember}
+          />
+        ) : (
+          <div className="text-center text-destructive">
+            You have reached the limit of free invoices
+          </div>
+        )
+      ) : null}
+    </div>
    );
 };
 
 export default HomePage;
+
+
+// if rate is not there show only rate comp and if rate is there then check for (invoic count < 5 || isMember) then show invoice form else show message
