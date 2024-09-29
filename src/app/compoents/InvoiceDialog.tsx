@@ -355,7 +355,7 @@ const InvoiceDialoag = ({ invoice, setInvoice }: InvoiceDialoagProps) => {
                      </h3>
                      <div className="mb-6 mt-4 flex justify-between border-y-2 border-black">
                         <p className="px-2 font-bold">other charges</p>
-                        <p className="px-2">{'some thing'}</p>
+                        <p className="px-2">0</p>
                      </div>
                      <table className="w-full">
                         <tbody>
@@ -389,7 +389,7 @@ const InvoiceDialoag = ({ invoice, setInvoice }: InvoiceDialoagProps) => {
                </div>
                {/* terms and condition */}
                <div className="p-2">
-                  <p className="text-xs">
+                  <p className="text-[11px]">
                      1.Please note that, the net amount includes Metal
                      Value, Cost of Stones (Precious,Non Precious and
                      other material Charges), Product Making Charges/

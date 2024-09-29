@@ -36,7 +36,12 @@ export const createInvoice = async ({ invoice }: CreateInvoiceProps) => {
          data: {
             customer: {
                connectOrCreate: {
-                  where: { mobileNumber: validatedInvoice.customerPhone },
+                  where: {
+                     adminId_mobileNumber: {
+                        adminId: user.id,
+                        mobileNumber: validatedInvoice.customerPhone,
+                     },
+                  },
                   create: {
                      name: validatedInvoice.customerName,
                      mobileNumber: validatedInvoice.customerPhone,

@@ -46,8 +46,10 @@ const InvoiceForm = ({
    const [isPending, startTransition] = useTransition();
    const [invoice, setInvoice] = useState<InvoicePrintData | null>(null);
    const [isSubmitting, setIsSubmitting] = useState(false);
-   const [invoiceCount, setInvoiceCount] = useState(0);
+   const [invoiceCount, setInvoiceCount] = useState(invoiceC);
    const [customer, setCustomer] = useState<Customer | null>(null);
+
+   const router = useRouter();
 
    const purityOptions = [
       { label: '14K', value: 'K14' },
@@ -211,7 +213,7 @@ const InvoiceForm = ({
          const paidAmount = form.getValues('paidAmount') || 0;
          const dueAmount = totalAmount - paidAmount;
 
-         form.setValue('dueAmount', dueAmount || 0, {
+         form.setValue('dueAmount', parseFloat(dueAmount.toFixed(2)) || 0, {
             shouldDirty: false,
             shouldValidate: false,
          });
@@ -227,7 +229,7 @@ const InvoiceForm = ({
       const totalAmount = form.getValues('totalAmount') || 0;
       const paidAmount = watchPaidAmount || 0;
       const dueAmount = totalAmount - paidAmount;
-      form.setValue('dueAmount', dueAmount || 0, {
+      form.setValue('dueAmount', parseFloat(dueAmount.toFixed(2)) || 0, {
          shouldDirty: false,
          shouldValidate: false,
       });
@@ -243,7 +245,7 @@ const InvoiceForm = ({
             if (createdInvoice) {
                setCustomer(null);
                if (!isMember) {
-                  setInvoiceCount(invoiceCount || invoiceC + 1);
+                  setInvoiceCount(invoiceCount + 1);
                }
                form.reset({
                   customerId: '',
@@ -298,115 +300,53 @@ const InvoiceForm = ({
       });
    };
 
-
-
    return (
-      <div className="rounded-md border border-gray-200 p-5 shadow-sm space-y-4">
+      <div className="space-y-4 rounded-md border border-gray-200 p-5 shadow-sm">
          {!isMember && (
             <div className="text-destructive">
-               {5 - (invoiceCount || invoiceC)} free invoices left
+               {5 - (invoiceCount)} free invoices left
+               <div className="space flex flex-col sm:flex-row items-center gap-3">
+                  <span className="text-muted-foreground">
+                     Upgrade to premium for unlimited invoices
+                  </span>
+                  <Button
+                     variant="default"
+                     size="sm"
+                     onClick={() => router.push('/membership')}
+                     className='max-w-xs bg-green-700 hover:bg-green-900'
+                  >
+                     Become a Member
+                  </Button>
+               </div>
             </div>
          )}
-         <NewInvoiceDialog setCustomer={setCustomer} />
-         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-               {error && (
-                  <p className="text-center text-sm text-red-600">{error}</p>
-               )}
 
+         {!isMember && invoiceCount <= 5 && (
+            <>
+               <NewInvoiceDialog setCustomer={setCustomer} />
 
-               {/* Customer Fields with Small Labels and Placeholders */}
-               <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                  <FormField
-                     control={form.control}
-                     name="customerName"
-                     render={({ field }) => (
-                        <FormItem>
-                           <FormLabel className="text-xs">Name</FormLabel>
-                           <FormControl>
-                              <Input
-                                 placeholder="Customer Name"
-                                 className="text-sm"
-                                 {...field}
-                              />
-                           </FormControl>
-                           <FormMessage />
-                        </FormItem>
-                     )}
-                  />
-
-                  <FormField
-                     control={form.control}
-                     name="customerPhone"
-                     render={({ field }) => (
-                        <FormItem>
-                           <FormLabel className="text-xs">Phone</FormLabel>
-                           <FormControl>
-                              <Input
-                                 placeholder="Customer Phone"
-                                 className="text-sm"
-                                 {...field}
-                              />
-                           </FormControl>
-                           <FormMessage />
-                        </FormItem>
-                     )}
-                  />
-
-                  <FormField
-                     control={form.control}
-                     name="customerAddress"
-                     render={({ field }) => (
-                        <FormItem>
-                           <FormLabel className="text-xs">Address</FormLabel>
-                           <FormControl>
-                              <Input
-                                 placeholder="Customer Address"
-                                 className="text-sm"
-                                 {...field}
-                              />
-                           </FormControl>
-                           <FormMessage />
-                        </FormItem>
-                     )}
-                  />
-               </div>
-
-               {fields.map((field, index) => (
-                  <div
-                     key={field.id}
-                     className="space-y-2 rounded-md border border-gray-300 bg-gray-50 p-3"
+               <Form {...form}>
+                  <form
+                     onSubmit={form.handleSubmit(onSubmit)}
+                     className="space-y-4"
                   >
-                     <div className="flex items-center justify-between">
-                        <h3 className="text-sm font-semibold">
-                           Product {index + 1}
-                        </h3>
-                        {index > 0 && (
-                           <Button
-                              type="button"
-                              variant="destructive"
-                              size="sm"
-                              onClick={() => remove(index)}
-                           >
-                              Remove
-                           </Button>
-                        )}
-                     </div>
+                     {error && (
+                        <p className="text-center text-sm text-red-600">
+                           {error}
+                        </p>
+                     )}
 
-                     {/* Product Fields in Grid */}
+                     {/* Customer Fields with Small Labels and Placeholders */}
                      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                        {/* Description */}
                         <FormField
                            control={form.control}
-                           name={`products.${index}.description`}
+                           name="customerName"
                            render={({ field }) => (
                               <FormItem>
-                                 <FormLabel className="text-xs">
-                                    Description
-                                 </FormLabel>
+                                 <FormLabel className="text-xs">Name</FormLabel>
                                  <FormControl>
                                     <Input
-                                       placeholder="Description"
+                                       placeholder="Customer Name"
                                        className="text-sm"
                                        {...field}
                                     />
@@ -416,174 +356,501 @@ const InvoiceForm = ({
                            )}
                         />
 
-                        {/* Purity */}
                         <FormField
                            control={form.control}
-                           name={`products.${index}.purity`}
+                           name="customerPhone"
                            render={({ field }) => (
                               <FormItem>
                                  <FormLabel className="text-xs">
-                                    Purity
+                                    Phone
                                  </FormLabel>
-                                 <Select
-                                    onValueChange={(value) =>
-                                       field.onChange(value)
-                                    }
-                                    value={field.value}
+                                 <FormControl>
+                                    <Input
+                                       placeholder="Customer Phone"
+                                       className="text-sm"
+                                       {...field}
+                                    />
+                                 </FormControl>
+                                 <FormMessage />
+                              </FormItem>
+                           )}
+                        />
+
+                        <FormField
+                           control={form.control}
+                           name="customerAddress"
+                           render={({ field }) => (
+                              <FormItem>
+                                 <FormLabel className="text-xs">
+                                    Address
+                                 </FormLabel>
+                                 <FormControl>
+                                    <Input
+                                       placeholder="Customer Address"
+                                       className="text-sm"
+                                       {...field}
+                                    />
+                                 </FormControl>
+                                 <FormMessage />
+                              </FormItem>
+                           )}
+                        />
+                     </div>
+
+                     {fields.map((field, index) => (
+                        <div
+                           key={field.id}
+                           className="space-y-2 rounded-md border border-gray-300 bg-gray-50 p-3"
+                        >
+                           <div className="flex items-center justify-between">
+                              <h3 className="text-sm font-semibold">
+                                 Product {index + 1}
+                              </h3>
+                              {index > 0 && (
+                                 <Button
+                                    type="button"
+                                    variant="destructive"
+                                    size="sm"
+                                    onClick={() => remove(index)}
                                  >
-                                    <FormControl>
-                                       <SelectTrigger className="text-sm">
-                                          <SelectValue placeholder="Select Purity" />
-                                       </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                       {purityOptions.map((option) => (
-                                          <SelectItem
-                                             key={option.value}
-                                             value={option.value}
-                                          >
-                                             {option.label}
-                                          </SelectItem>
-                                       ))}
-                                    </SelectContent>
-                                 </Select>
-                                 <FormMessage />
-                              </FormItem>
-                           )}
-                        />
+                                    Remove
+                                 </Button>
+                              )}
+                           </div>
 
-                        {/* Net Quantity */}
+                           {/* Product Fields in Grid */}
+                           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                              {/* Description */}
+                              <FormField
+                                 control={form.control}
+                                 name={`products.${index}.description`}
+                                 render={({ field }) => (
+                                    <FormItem>
+                                       <FormLabel className="text-xs">
+                                          Description
+                                       </FormLabel>
+                                       <FormControl>
+                                          <Input
+                                             placeholder="Description"
+                                             className="text-sm"
+                                             {...field}
+                                          />
+                                       </FormControl>
+                                       <FormMessage />
+                                    </FormItem>
+                                 )}
+                              />
+
+                              {/* Purity */}
+                              <FormField
+                                 control={form.control}
+                                 name={`products.${index}.purity`}
+                                 render={({ field }) => (
+                                    <FormItem>
+                                       <FormLabel className="text-xs">
+                                          Purity
+                                       </FormLabel>
+                                       <Select
+                                          onValueChange={(value) =>
+                                             field.onChange(value)
+                                          }
+                                          value={field.value}
+                                       >
+                                          <FormControl>
+                                             <SelectTrigger className="text-sm">
+                                                <SelectValue placeholder="Select Purity" />
+                                             </SelectTrigger>
+                                          </FormControl>
+                                          <SelectContent>
+                                             {purityOptions.map((option) => (
+                                                <SelectItem
+                                                   key={option.value}
+                                                   value={option.value}
+                                                >
+                                                   {option.label}
+                                                </SelectItem>
+                                             ))}
+                                          </SelectContent>
+                                       </Select>
+                                       <FormMessage />
+                                    </FormItem>
+                                 )}
+                              />
+
+                              {/* Net Quantity */}
+                              <FormField
+                                 control={form.control}
+                                 name={`products.${index}.netQuantity`}
+                                 render={({ field }) => (
+                                    <FormItem>
+                                       <FormLabel className="text-xs">
+                                          Net Quantity
+                                       </FormLabel>
+                                       <FormControl>
+                                          <Input
+                                             type="number"
+                                             placeholder="Net Quantity"
+                                             className="text-sm"
+                                             {...field}
+                                             value={field.value ?? ''}
+                                             onChange={(e) => {
+                                                const value = e.target.value;
+                                                field.onChange(
+                                                   value === ''
+                                                      ? 0
+                                                      : parseFloat(value),
+                                                );
+                                             }}
+                                          />
+                                       </FormControl>
+                                       <FormMessage />
+                                    </FormItem>
+                                 )}
+                              />
+
+                              {/* Gross Weight */}
+                              <FormField
+                                 control={form.control}
+                                 name={`products.${index}.GrossWeight`}
+                                 render={({ field }) => (
+                                    <FormItem>
+                                       <FormLabel className="text-xs">
+                                          Gross Weight (g)
+                                       </FormLabel>
+                                       <FormControl>
+                                          <Input
+                                             type="number"
+                                             placeholder="Gross Weight"
+                                             className="text-sm"
+                                             {...field}
+                                             value={field.value ?? ''}
+                                             onChange={(e) => {
+                                                const value = e.target.value;
+                                                field.onChange(
+                                                   value === ''
+                                                      ? 0
+                                                      : parseFloat(value),
+                                                );
+                                             }}
+                                          />
+                                       </FormControl>
+                                       <FormMessage />
+                                    </FormItem>
+                                 )}
+                              />
+
+                              {/* Net Stone Weight */}
+                              <FormField
+                                 control={form.control}
+                                 name={`products.${index}.netStoneWeight`}
+                                 render={({ field }) => (
+                                    <FormItem>
+                                       <FormLabel className="text-xs">
+                                          Net Stone Weight (g)
+                                       </FormLabel>
+                                       <FormControl>
+                                          <Input
+                                             type="number"
+                                             placeholder="Net Stone Weight"
+                                             className="text-sm"
+                                             {...field}
+                                             value={field.value ?? ''}
+                                             onChange={(e) => {
+                                                const value = e.target.value;
+                                                field.onChange(
+                                                   value === ''
+                                                      ? 0
+                                                      : parseFloat(value),
+                                                );
+                                             }}
+                                          />
+                                       </FormControl>
+                                       <FormMessage />
+                                    </FormItem>
+                                 )}
+                              />
+
+                              {/* Stone Price */}
+                              <FormField
+                                 control={form.control}
+                                 name={`products.${index}.stonePrice`}
+                                 render={({ field }) => (
+                                    <FormItem>
+                                       <FormLabel className="text-xs">
+                                          Stone Price (₹)
+                                       </FormLabel>
+                                       <FormControl>
+                                          <Input
+                                             type="number"
+                                             placeholder="Stone Price"
+                                             className="text-sm"
+                                             {...field}
+                                             value={field.value ?? ''}
+                                             onChange={(e) => {
+                                                const value = e.target.value;
+                                                field.onChange(
+                                                   value === ''
+                                                      ? 0
+                                                      : parseFloat(value),
+                                                );
+                                             }}
+                                          />
+                                       </FormControl>
+                                       <FormMessage />
+                                    </FormItem>
+                                 )}
+                              />
+
+                              {/* Gross Product Price (calculated) */}
+                              <FormField
+                                 control={form.control}
+                                 name={`products.${index}.GrossProductPrice`}
+                                 render={({ field }) => (
+                                    <FormItem>
+                                       <FormLabel className="text-xs">
+                                          Gross Product Price (₹)
+                                       </FormLabel>
+                                       <FormControl>
+                                          <Input
+                                             placeholder="0.00"
+                                             className="bg-gray-100 text-sm"
+                                             {...field}
+                                             value={field.value ?? ''}
+                                             readOnly
+                                          />
+                                       </FormControl>
+                                    </FormItem>
+                                 )}
+                              />
+
+                              {/* Discount (%) */}
+                              <FormField
+                                 control={form.control}
+                                 name={`products.${index}.discount`}
+                                 render={({ field }) => (
+                                    <FormItem>
+                                       <FormLabel className="text-xs">
+                                          Discount (%)
+                                       </FormLabel>
+                                       <FormControl>
+                                          <Input
+                                             type="number"
+                                             placeholder="%"
+                                             className="text-sm"
+                                             {...field}
+                                             value={field.value ?? ''}
+                                             onChange={(e) => {
+                                                const value = e.target.value;
+                                                field.onChange(
+                                                   value === ''
+                                                      ? 0
+                                                      : parseFloat(value),
+                                                );
+                                             }}
+                                          />
+                                       </FormControl>
+                                       <FormMessage />
+                                    </FormItem>
+                                 )}
+                              />
+
+                              {/* Making Charge (%) */}
+                              <FormField
+                                 control={form.control}
+                                 name={`products.${index}.MakingCharge`}
+                                 render={({ field }) => (
+                                    <FormItem>
+                                       <FormLabel className="text-xs">
+                                          Making Charge (%)
+                                       </FormLabel>
+                                       <FormControl>
+                                          <Input
+                                             type="number"
+                                             placeholder="%"
+                                             className="text-sm"
+                                             {...field}
+                                             value={field.value ?? ''}
+                                             onChange={(e) => {
+                                                const value = e.target.value;
+                                                field.onChange(
+                                                   value === ''
+                                                      ? 0
+                                                      : parseFloat(value),
+                                                );
+                                             }}
+                                          />
+                                       </FormControl>
+                                       <FormMessage />
+                                    </FormItem>
+                                 )}
+                              />
+
+                              {/* CGST (%) */}
+                              <FormField
+                                 control={form.control}
+                                 name={`products.${index}.CGST`}
+                                 render={({ field }) => (
+                                    <FormItem>
+                                       <FormLabel className="text-xs">
+                                          CGST (%)
+                                       </FormLabel>
+                                       <FormControl>
+                                          <Input
+                                             type="number"
+                                             placeholder="%"
+                                             className="text-sm"
+                                             {...field}
+                                             value={field.value ?? ''}
+                                             onChange={(e) => {
+                                                const value = e.target.value;
+                                                field.onChange(
+                                                   value === ''
+                                                      ? 0
+                                                      : parseFloat(value),
+                                                );
+                                             }}
+                                          />
+                                       </FormControl>
+                                       <FormMessage />
+                                    </FormItem>
+                                 )}
+                              />
+
+                              {/* SGST (%) */}
+                              <FormField
+                                 control={form.control}
+                                 name={`products.${index}.SGST`}
+                                 render={({ field }) => (
+                                    <FormItem>
+                                       <FormLabel className="text-xs">
+                                          SGST (%)
+                                       </FormLabel>
+                                       <FormControl>
+                                          <Input
+                                             type="number"
+                                             placeholder="%"
+                                             className="text-sm"
+                                             {...field}
+                                             value={field.value ?? ''}
+                                             onChange={(e) => {
+                                                const value = e.target.value;
+                                                field.onChange(
+                                                   value === ''
+                                                      ? 0
+                                                      : parseFloat(value),
+                                                );
+                                             }}
+                                          />
+                                       </FormControl>
+                                       <FormMessage />
+                                    </FormItem>
+                                 )}
+                              />
+
+                              {/* Calculated CGST Amount */}
+                              <FormField
+                                 control={form.control}
+                                 name={`products.${index}.CGSTAmount`}
+                                 render={({ field }) => (
+                                    <FormItem>
+                                       <FormLabel className="text-xs">
+                                          CGST Amount (₹)
+                                       </FormLabel>
+                                       <FormControl>
+                                          <Input
+                                             placeholder="0.00"
+                                             className="bg-gray-100 text-sm"
+                                             {...field}
+                                             value={field.value ?? ''}
+                                             readOnly
+                                          />
+                                       </FormControl>
+                                    </FormItem>
+                                 )}
+                              />
+
+                              {/* Calculated SGST Amount */}
+                              <FormField
+                                 control={form.control}
+                                 name={`products.${index}.SGSTAmount`}
+                                 render={({ field }) => (
+                                    <FormItem>
+                                       <FormLabel className="text-xs">
+                                          SGST Amount (₹)
+                                       </FormLabel>
+                                       <FormControl>
+                                          <Input
+                                             placeholder="0.00"
+                                             className="bg-gray-100 text-sm"
+                                             {...field}
+                                             value={field.value ?? ''}
+                                             readOnly
+                                          />
+                                       </FormControl>
+                                    </FormItem>
+                                 )}
+                              />
+
+                              {/* Product Value (calculated) */}
+                              <FormField
+                                 control={form.control}
+                                 name={`products.${index}.productValue`}
+                                 render={({ field }) => (
+                                    <FormItem>
+                                       <FormLabel className="text-xs">
+                                          Product Value (₹)
+                                       </FormLabel>
+                                       <FormControl>
+                                          <Input
+                                             placeholder="0.00"
+                                             className="bg-gray-100 text-sm"
+                                             {...field}
+                                             value={field.value ?? ''}
+                                             readOnly
+                                          />
+                                       </FormControl>
+                                    </FormItem>
+                                 )}
+                              />
+                           </div>
+                        </div>
+                     ))}
+
+                     <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="w-full text-sm"
+                        onClick={() =>
+                           append({
+                              description: '',
+                              purity: '' as Purity,
+                              netQuantity: 0,
+                              GrossWeight: 0,
+                              netStoneWeight: 0,
+                              stonePrice: 0,
+                              GrossProductPrice: 0,
+                              MakingCharge: 0,
+                              discount: 0,
+                              CGST: 1.5,
+                              SGST: 1.5,
+                              productValue: 0,
+                              CGSTAmount: 0,
+                              SGSTAmount: 0,
+                           })
+                        }
+                     >
+                        Add More Products
+                     </Button>
+
+                     <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                         <FormField
                            control={form.control}
-                           name={`products.${index}.netQuantity`}
+                           name="totalAmount"
                            render={({ field }) => (
                               <FormItem>
                                  <FormLabel className="text-xs">
-                                    Net Quantity
-                                 </FormLabel>
-                                 <FormControl>
-                                    <Input
-                                       type="number"
-                                       placeholder="Net Quantity"
-                                       className="text-sm"
-                                       {...field}
-                                       value={field.value ?? ''}
-                                       onChange={(e) => {
-                                          const value = e.target.value;
-                                          field.onChange(
-                                             value === ''
-                                                ? 0
-                                                : parseFloat(value),
-                                          );
-                                       }}
-                                    />
-                                 </FormControl>
-                                 <FormMessage />
-                              </FormItem>
-                           )}
-                        />
-
-                        {/* Gross Weight */}
-                        <FormField
-                           control={form.control}
-                           name={`products.${index}.GrossWeight`}
-                           render={({ field }) => (
-                              <FormItem>
-                                 <FormLabel className="text-xs">
-                                    Gross Weight (g)
-                                 </FormLabel>
-                                 <FormControl>
-                                    <Input
-                                       type="number"
-                                       placeholder="Gross Weight"
-                                       className="text-sm"
-                                       {...field}
-                                       value={field.value ?? ''}
-                                       onChange={(e) => {
-                                          const value = e.target.value;
-                                          field.onChange(
-                                             value === ''
-                                                ? 0
-                                                : parseFloat(value),
-                                          );
-                                       }}
-                                    />
-                                 </FormControl>
-                                 <FormMessage />
-                              </FormItem>
-                           )}
-                        />
-
-                        {/* Net Stone Weight */}
-                        <FormField
-                           control={form.control}
-                           name={`products.${index}.netStoneWeight`}
-                           render={({ field }) => (
-                              <FormItem>
-                                 <FormLabel className="text-xs">
-                                    Net Stone Weight (g)
-                                 </FormLabel>
-                                 <FormControl>
-                                    <Input
-                                       type="number"
-                                       placeholder="Net Stone Weight"
-                                       className="text-sm"
-                                       {...field}
-                                       value={field.value ?? ''}
-                                       onChange={(e) => {
-                                          const value = e.target.value;
-                                          field.onChange(
-                                             value === ''
-                                                ? 0
-                                                : parseFloat(value),
-                                          );
-                                       }}
-                                    />
-                                 </FormControl>
-                                 <FormMessage />
-                              </FormItem>
-                           )}
-                        />
-
-                        {/* Stone Price */}
-                        <FormField
-                           control={form.control}
-                           name={`products.${index}.stonePrice`}
-                           render={({ field }) => (
-                              <FormItem>
-                                 <FormLabel className="text-xs">
-                                    Stone Price (₹)
-                                 </FormLabel>
-                                 <FormControl>
-                                    <Input
-                                       type="number"
-                                       placeholder="Stone Price"
-                                       className="text-sm"
-                                       {...field}
-                                       value={field.value ?? ''}
-                                       onChange={(e) => {
-                                          const value = e.target.value;
-                                          field.onChange(
-                                             value === ''
-                                                ? 0
-                                                : parseFloat(value),
-                                          );
-                                       }}
-                                    />
-                                 </FormControl>
-                                 <FormMessage />
-                              </FormItem>
-                           )}
-                        />
-
-                        {/* Gross Product Price (calculated) */}
-                        <FormField
-                           control={form.control}
-                           name={`products.${index}.GrossProductPrice`}
-                           render={({ field }) => (
-                              <FormItem>
-                                 <FormLabel className="text-xs">
-                                    Gross Product Price (₹)
+                                    Total Amount (₹)
                                  </FormLabel>
                                  <FormControl>
                                     <Input
@@ -598,19 +865,18 @@ const InvoiceForm = ({
                            )}
                         />
 
-                        {/* Discount (%) */}
                         <FormField
                            control={form.control}
-                           name={`products.${index}.discount`}
+                           name="paidAmount"
                            render={({ field }) => (
                               <FormItem>
                                  <FormLabel className="text-xs">
-                                    Discount (%)
+                                    Paid Amount (₹)
                                  </FormLabel>
                                  <FormControl>
                                     <Input
                                        type="number"
-                                       placeholder="%"
+                                       placeholder="Paid Amount"
                                        className="text-sm"
                                        {...field}
                                        value={field.value ?? ''}
@@ -629,151 +895,13 @@ const InvoiceForm = ({
                            )}
                         />
 
-                        {/* Making Charge (%) */}
                         <FormField
                            control={form.control}
-                           name={`products.${index}.MakingCharge`}
+                           name="dueAmount"
                            render={({ field }) => (
                               <FormItem>
                                  <FormLabel className="text-xs">
-                                    Making Charge (%)
-                                 </FormLabel>
-                                 <FormControl>
-                                    <Input
-                                       type="number"
-                                       placeholder="%"
-                                       className="text-sm"
-                                       {...field}
-                                       value={field.value ?? ''}
-                                       onChange={(e) => {
-                                          const value = e.target.value;
-                                          field.onChange(
-                                             value === ''
-                                                ? 0
-                                                : parseFloat(value),
-                                          );
-                                       }}
-                                    />
-                                 </FormControl>
-                                 <FormMessage />
-                              </FormItem>
-                           )}
-                        />
-
-                        {/* CGST (%) */}
-                        <FormField
-                           control={form.control}
-                           name={`products.${index}.CGST`}
-                           render={({ field }) => (
-                              <FormItem>
-                                 <FormLabel className="text-xs">
-                                    CGST (%)
-                                 </FormLabel>
-                                 <FormControl>
-                                    <Input
-                                       type="number"
-                                       placeholder="%"
-                                       className="text-sm"
-                                       {...field}
-                                       value={field.value ?? ''}
-                                       onChange={(e) => {
-                                          const value = e.target.value;
-                                          field.onChange(
-                                             value === ''
-                                                ? 0
-                                                : parseFloat(value),
-                                          );
-                                       }}
-                                    />
-                                 </FormControl>
-                                 <FormMessage />
-                              </FormItem>
-                           )}
-                        />
-
-                        {/* SGST (%) */}
-                        <FormField
-                           control={form.control}
-                           name={`products.${index}.SGST`}
-                           render={({ field }) => (
-                              <FormItem>
-                                 <FormLabel className="text-xs">
-                                    SGST (%)
-                                 </FormLabel>
-                                 <FormControl>
-                                    <Input
-                                       type="number"
-                                       placeholder="%"
-                                       className="text-sm"
-                                       {...field}
-                                       value={field.value ?? ''}
-                                       onChange={(e) => {
-                                          const value = e.target.value;
-                                          field.onChange(
-                                             value === ''
-                                                ? 0
-                                                : parseFloat(value),
-                                          );
-                                       }}
-                                    />
-                                 </FormControl>
-                                 <FormMessage />
-                              </FormItem>
-                           )}
-                        />
-
-                        {/* Calculated CGST Amount */}
-                        <FormField
-                           control={form.control}
-                           name={`products.${index}.CGSTAmount`}
-                           render={({ field }) => (
-                              <FormItem>
-                                 <FormLabel className="text-xs">
-                                    CGST Amount (₹)
-                                 </FormLabel>
-                                 <FormControl>
-                                    <Input
-                                       placeholder="0.00"
-                                       className="bg-gray-100 text-sm"
-                                       {...field}
-                                       value={field.value ?? ''}
-                                       readOnly
-                                    />
-                                 </FormControl>
-                              </FormItem>
-                           )}
-                        />
-
-                        {/* Calculated SGST Amount */}
-                        <FormField
-                           control={form.control}
-                           name={`products.${index}.SGSTAmount`}
-                           render={({ field }) => (
-                              <FormItem>
-                                 <FormLabel className="text-xs">
-                                    SGST Amount (₹)
-                                 </FormLabel>
-                                 <FormControl>
-                                    <Input
-                                       placeholder="0.00"
-                                       className="bg-gray-100 text-sm"
-                                       {...field}
-                                       value={field.value ?? ''}
-                                       readOnly
-                                    />
-                                 </FormControl>
-                              </FormItem>
-                           )}
-                        />
-
-                        {/* Product Value (calculated) */}
-                        <FormField
-                           control={form.control}
-                           name={`products.${index}.productValue`}
-                           render={({ field }) => (
-                              <FormItem>
-                                 <FormLabel className="text-xs">
-                                    Product Value (₹)
+                                    Due Amount (₹)
                                  </FormLabel>
                                  <FormControl>
                                     <Input
@@ -788,123 +916,27 @@ const InvoiceForm = ({
                            )}
                         />
                      </div>
-                  </div>
-               ))}
 
-               <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  className="w-full text-sm"
-                  onClick={() =>
-                     append({
-                        description: '',
-                        purity: '' as Purity,
-                        netQuantity: 0,
-                        GrossWeight: 0,
-                        netStoneWeight: 0,
-                        stonePrice: 0,
-                        GrossProductPrice: 0,
-                        MakingCharge: 0,
-                        discount: 0,
-                        CGST: 1.5,
-                        SGST: 1.5,
-                        productValue: 0,
-                        CGSTAmount: 0,
-                        SGSTAmount: 0,
-                     })
-                  }
-               >
-                  Add More Products
-               </Button>
+                     <div className="space-y-2">
+                        <LoadingButton
+                           loading={isPending}
+                           type="submit"
+                           className="w-full text-sm"
+                        >
+                           Create Invoice
+                        </LoadingButton>
 
-               <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                  <FormField
-                     control={form.control}
-                     name="totalAmount"
-                     render={({ field }) => (
-                        <FormItem>
-                           <FormLabel className="text-xs">
-                              Total Amount (₹)
-                           </FormLabel>
-                           <FormControl>
-                              <Input
-                                 placeholder="0.00"
-                                 className="bg-gray-100 text-sm"
-                                 {...field}
-                                 value={field.value ?? ''}
-                                 readOnly
-                              />
-                           </FormControl>
-                        </FormItem>
-                     )}
-                  />
+                        <InvoiceDialoag
+                           invoice={invoice}
+                           setInvoice={setInvoice}
+                        />
+                     </div>
 
-                  <FormField
-                     control={form.control}
-                     name="paidAmount"
-                     render={({ field }) => (
-                        <FormItem>
-                           <FormLabel className="text-xs">
-                              Paid Amount (₹)
-                           </FormLabel>
-                           <FormControl>
-                              <Input
-                                 type="number"
-                                 placeholder="Paid Amount"
-                                 className="text-sm"
-                                 {...field}
-                                 value={field.value ?? ''}
-                                 onChange={(e) => {
-                                    const value = e.target.value;
-                                    field.onChange(
-                                       value === '' ? 0 : parseFloat(value),
-                                    );
-                                 }}
-                              />
-                           </FormControl>
-                           <FormMessage />
-                        </FormItem>
-                     )}
-                  />
-
-                  <FormField
-                     control={form.control}
-                     name="dueAmount"
-                     render={({ field }) => (
-                        <FormItem>
-                           <FormLabel className="text-xs">
-                              Due Amount (₹)
-                           </FormLabel>
-                           <FormControl>
-                              <Input
-                                 placeholder="0.00"
-                                 className="bg-gray-100 text-sm"
-                                 {...field}
-                                 value={field.value ?? ''}
-                                 readOnly
-                              />
-                           </FormControl>
-                        </FormItem>
-                     )}
-                  />
-               </div>
-
-               <div className="space-y-2">
-                  <LoadingButton
-                     loading={isPending}
-                     type="submit"
-                     className="w-full text-sm"
-                  >
-                     Create Invoice
-                  </LoadingButton>
-
-                  <InvoiceDialoag invoice={invoice} setInvoice={setInvoice} />
-               </div>
-
-               <DevTool control={form.control} />
-            </form>
-         </Form>
+                     <DevTool control={form.control} />
+                  </form>
+               </Form>
+            </>
+         )}
       </div>
    );
 };

@@ -18,7 +18,8 @@ const MainLayout = async ({ children }: { children: React.ReactNode }) => {
       },
    })
    if(!userData) {
-      redirect('/login');
+      return window.location.reload(); 
+       
    }
 
 

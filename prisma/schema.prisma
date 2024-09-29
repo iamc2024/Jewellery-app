@@ -52,18 +52,20 @@ model Membership {
 
   createdAt DateTime @default(now())
 }
-
 model Customer {
   id           String    @id @default(uuid())
   name         String
-  mobileNumber String    @unique
+  mobileNumber String    
   address      String
   adminId      String
   user         User      @relation(fields: [adminId], references: [id])
   invoices     Invoice[]
 
+  @@unique([adminId, mobileNumber]) // Composite unique constraint
+
   @@map("customers")
 }
+
 
 model Invoice {
   id         String   @id @default(uuid())

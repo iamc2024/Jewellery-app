@@ -21,6 +21,7 @@ import LoadingButton from '@/components/LoadingButton';
 import type { Rate } from '@prisma/client';
 import { rateSchema, type RateValues } from '@/lib/validation';
 import { submitRates } from './action';
+import { formatDate } from '@/lib/fomatDate';
 
 interface RateProps {
    rate: Rate | null;
@@ -47,28 +48,27 @@ const Rate = ({ rate: rates }: RateProps) => {
       },
    });
    useEffect(() => {
-      const currentDate = new Date().toISOString().split('T')[0];
-      setCurrentDate(currentDate);
+      const currentDate = formatDate( new Date());
+      setCurrentDate(currentDate); 
+      console.log('this is current date', currentDate) 
       form.setValue('date', currentDate);
    }, [form]);
 
-   const mutation = useMutation({
-      mutationFn: submitRates,
-      onSuccess: (data) => {
-         const queryKey: QueryKey = ['rates'];
-         if (data.createdRate) {
-            queryClient.invalidateQueries({ queryKey });
-            form.reset();
-            setRateData(data.createdRate);
-            setError(undefined);
-         }
-      },
-      onError: (error) => {
-         console.error('Error adding rates:', error);
-         setError('Failed to add rates. Please try again.');
-      },
-   });
-
+const mutation = useMutation({
+   mutationFn: submitRates,
+   onSuccess: (data) => {
+      if (data.createdRate) {
+         form.reset();
+         setRateData(data.createdRate);
+         setError(undefined);
+         window.location.reload(); // Refresh the page
+      }
+   },
+   onError: (error) => {
+      console.error('Error adding rates:', error);
+      setError('Failed to add rates. Please try again.');
+   },
+});
    const onSubmit = (values: RateValues) => {
       setError(undefined);
       mutation.mutate({ rates: values });
