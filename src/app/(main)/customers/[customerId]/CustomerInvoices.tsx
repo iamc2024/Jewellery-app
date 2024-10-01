@@ -21,11 +21,11 @@ interface Invoice {
 }
 
 const CustomerInvoice = ({ params: { customerId } }: PageProps) => {
-  const { user } = useSessionContext();
+  const { userData } = useSessionContext();
 
 
   //
-  if (!user)
+  if (!userData)
     return (
       <div className="flex items-center justify-center h-screen">
         <p className="text-red-600">You&apos;re not authorized to view this page.</p>
