@@ -58,7 +58,7 @@ model Customer {
   mobileNumber String    
   address      String
   adminId      String
-  user         User      @relation(fields: [adminId], references: [id])
+  user         User      @relation(fields: [adminId], references: [id], onDelete: Cascade)
   invoices     Invoice[]
 
   @@unique([adminId, mobileNumber]) // Composite unique constraint
@@ -136,7 +136,7 @@ model Rate {
 model Session {
   id        String   @id
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id],  onDelete: Cascade)
   expiresAt DateTime
 
   @@map("sessions")

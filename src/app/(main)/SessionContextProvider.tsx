@@ -8,7 +8,6 @@ import type { User as UserData } from '@prisma/client';
 import { createContext, useContext } from "react"
 
 interface SessionContextType {
-    user: User
     session: Session
     userData: UserData
 }

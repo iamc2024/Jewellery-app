@@ -11,9 +11,10 @@ import Link from 'next/link';
 
 const HomePage = async () => {
    const { user } = await validateRequest();
-   if (!user) throw new Error('unauthorized');
-
-   console.log('this is getting executed');
+   if (!user) {
+      console.log('this is getting executed');
+      return null;
+   }
 
    const currentDate = new Date();
    const formattedDate = formatDate(currentDate);
