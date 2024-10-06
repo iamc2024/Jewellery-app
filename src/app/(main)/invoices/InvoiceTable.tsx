@@ -11,6 +11,7 @@ import {
 import type { InvoiceData } from '@/lib/types';
 import Link from 'next/link';
 import InvoiceDownlaodButton from './InvoiceDownlaodButton';
+import DeleteInvoiceButton from './DeleteInvoiceButton';
 
 interface InvoicesTableProps {
    invoices: InvoiceData[];
@@ -31,10 +32,21 @@ const InvoicesTable = ({
          <Table>
             <TableHeader>
                <TableRow>
-                  <TableHead className='text-xs sm:text-base'>Customer Name</TableHead>
-                  <TableHead className='text-xs sm:text-base'>Created</TableHead>
-                  <TableHead className='text-xs sm:text-base'>Total Amount</TableHead>
-                  <TableHead className='hidden sm:inline-block'>Paid Amount</TableHead>
+                  <TableHead className="text-xs sm:text-base">
+                     Customer Name
+                  </TableHead>
+                  <TableHead className="text-xs sm:text-base">
+                     Created
+                  </TableHead>
+                  <TableHead className="text-xs sm:text-base">
+                     Total Amount
+                  </TableHead>
+                  <TableHead className="hidden sm:inline-block">
+                     Paid Amount
+                  </TableHead>
+                  <TableHead>
+                     Delete
+                  </TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                </TableRow>
             </TableHeader>
@@ -42,18 +54,27 @@ const InvoicesTable = ({
             <TableBody>
                {invoices.map((invoice) => (
                   <TableRow key={invoice.id}>
-                        <Link
-                           href={`/customers/${invoice.customerId}`}
-                           key={invoice.id}
-                           className="hover:underline"
-                        >
-                     <TableCell className=" text-xs sm:text-base font-bold cursor-pointer capitalize text-blue-800">
+                     <Link
+                        href={`/customers/${invoice.customerId}`}
+                        key={invoice.id}
+                        className="hover:underline"
+                     >
+                        <TableCell className="cursor-pointer text-xs font-bold capitalize text-blue-800 sm:text-base">
                            {invoice.customer.name}
+                        </TableCell>
+                     </Link>
+                     <TableCell className="text-xs sm:text-base">
+                        {new Date(invoice.createdAt).toLocaleDateString()}
                      </TableCell>
-                        </Link>
-                     <TableCell className='text-xs sm:text-base'>{new Date(invoice.createdAt).toLocaleDateString()}</TableCell>
-                     <TableCell className='text-xs sm:text-base'>{invoice.totalAmount}</TableCell>
-                     <TableCell className='hidden sm:inline-block'>{invoice.paidAmount}</TableCell>
+                     <TableCell className="text-xs sm:text-base">
+                        {invoice.totalAmount}
+                     </TableCell>
+                     <TableCell className="hidden sm:inline-block">
+                        {invoice.paidAmount}
+                     </TableCell>
+                     <TableCell>
+                        <DeleteInvoiceButton invoiceId={invoice.id} />
+                     </TableCell>
                      <TableCell className="text-right">
                         <InvoiceDownlaodButton invoiceId={invoice.id} />
                      </TableCell>

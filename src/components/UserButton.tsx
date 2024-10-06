@@ -44,7 +44,7 @@ const UserButton = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent>
                <DropdownMenuLabel>
-                  logged in as @{userData.username}
+                  logged in as @{userData.displayName}
                </DropdownMenuLabel>
       
 

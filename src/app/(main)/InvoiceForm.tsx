@@ -85,8 +85,8 @@ const InvoiceForm = ({
                purity: '' as Purity,
                netQuantity: undefined,
                GrossWeight: undefined,
-               netStoneWeight: undefined,
-               stonePrice: undefined,
+               netStoneWeight: 0,
+               stonePrice: 0,
                GrossProductPrice: undefined,
                MakingCharge: undefined,
                discount: undefined,
@@ -304,8 +304,8 @@ const InvoiceForm = ({
       <div className="space-y-4 rounded-md border border-gray-200 p-5 shadow-sm">
          {!isMember && (
             <div className="text-destructive">
-               {5 - (invoiceCount)} free invoices left
-               <div className="space flex flex-col sm:flex-row items-center gap-3">
+               {5 - invoiceCount} free invoices left
+               <div className="space flex flex-col items-center gap-3 sm:flex-row">
                   <span className="text-muted-foreground">
                      Upgrade to premium for unlimited invoices
                   </span>
@@ -313,7 +313,7 @@ const InvoiceForm = ({
                      variant="default"
                      size="sm"
                      onClick={() => router.push('/membership')}
-                     className='max-w-xs bg-green-700 hover:bg-green-900'
+                     className="max-w-xs bg-green-700 hover:bg-green-900"
                   >
                      Become a Member
                   </Button>
@@ -925,12 +925,17 @@ const InvoiceForm = ({
                         >
                            Create Invoice
                         </LoadingButton>
-
-                        <InvoiceDialoag
-                           invoice={invoice}
-                           setInvoice={setInvoice}
-                        />
                      </div>
+                     {
+                        <div>
+                           
+                           {/*className="w- absolute inset-0 m-32 h-fit space-y-3 bg-white p-4 shadow-2xl" */}
+                           <InvoiceDialoag
+                              invoice={invoice}
+                              setInvoice={setInvoice}
+                           />
+                        </div>
+                     }
 
                      <DevTool control={form.control} />
                   </form>
@@ -988,6 +993,7 @@ const NewInvoiceDialog = ({ setCustomer }: NewInvoiceDialogProps) => {
             <LoadingButton loading={isPending} type="submit">
                Add Invoice
             </LoadingButton>
+           
          </form>
       </>
    );

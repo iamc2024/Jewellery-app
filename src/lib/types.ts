@@ -89,7 +89,6 @@ const invoice = {
    },
    user: {
       id: 'zeb3vn37exs2nbu4',
-      username: 'testuser',
       displayName: 'testuser',
       passwordHash:
          '$argon2id$v=19$m=19456,t=2,p=1$332i/its2PNWd6QUT2P3PA$e5UfECYU6wP2OOk95H6Pqd3Rv6W+WeeTwCki2JXUMWY',

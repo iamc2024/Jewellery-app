@@ -15,7 +15,7 @@ export const signUp = async (
    credentials: SignUpValues,
 ): Promise<{ error: string }> => {
    try {
-      const { email, username, password, companyName, address } = signUpSchema.parse(credentials);
+      const { email, password, companyName, address } = signUpSchema.parse(credentials);
 
       const passwordHash = await hash(password, {
          memoryCost: 19456,
@@ -25,19 +25,7 @@ export const signUp = async (
       });
 
       const userId = generateIdFromEntropySize(10);
-      const existingUsername = await prisma.user.findFirst({
-         where: {
-            username: {
-               equals: username,
-               mode: 'insensitive',
-            },
-         },
-      });
-      if (existingUsername) {
-         return {
-            error: 'Username already exists',
-         };
-      }
+
 
       const existingEmail = await prisma.user.findFirst({
          where: {
@@ -57,9 +45,8 @@ export const signUp = async (
          data: {
             id: userId,
             email,
-            username,
             passwordHash,
-            displayName: username,
+            displayName: companyName,
             companyName,
             address,
          },

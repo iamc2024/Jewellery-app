@@ -7,7 +7,6 @@ import { verify } from '@node-rs/argon2';
 import { isRedirectError } from 'next/dist/client/components/redirect';
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
-
 export const login = async (credentials: LoginValues) => {
    try {
       const { email, password } = loginSchema.parse(credentials);
@@ -42,21 +41,23 @@ export const login = async (credentials: LoginValues) => {
 
       const session = await lucia.createSession(existingUser.id, {});
 
-      const sessioCookie = lucia.createSessionCookie(session.id);
-
+      // Set the cookie before the redirect
+      const sessionCookie = lucia.createSessionCookie(session.id);
       cookies().set(
-         sessioCookie.name,
-         sessioCookie.value,
-         sessioCookie.attributes,
+         sessionCookie.name,
+         sessionCookie.value,
+         sessionCookie.attributes,
       );
 
-      return redirect('/');
+      // Redirect only after setting the cookie
+      redirect('/');
    } catch (error) {
       console.error(error);
       if (isRedirectError(error)) throw error;
 
       return {
-         error: 'something went wrong ',
+         error: 'Something went wrong',
       };
    }
 };
+

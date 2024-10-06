@@ -19,65 +19,55 @@ const HomePage = async () => {
    const currentDate = new Date();
    const formattedDate = formatDate(currentDate);
    console.log('this is formatted date', formattedDate);
-
-   const [rate, userData]: [
-      RateType | null,
-      { isMember: boolean; invoiceCount: number } | null,
-   ] = await prisma.$transaction([
-      prisma.rate.findFirst({
-         where: {
-            date: formattedDate,
-            adminId: user.id,
-         },
-      }),
-      prisma.user.findFirst({
-         where: {
-            id: user.id,
-         },
-         select: {
-            invoiceCount: true,
-            isMember: true,
-            Rates: {
-               where: {
-                  date: formattedDate, // Start of today
-               },
+   const userData = await  prisma.user.findFirst({
+      where: {
+         id: user.id,
+      },
+      select: {
+         invoiceCount: true,
+         isMember: true,
+         Rates: {
+            where: {
+               date: formattedDate, // Start of today
             },
          },
-      }),
-   ]);
+      },
+   });
+   
 
    if (!userData) throw new Error('User not found');
    console.log('this is rate', userData);
 
    return (
       <div className="min-h-screen w-full space-y-5">
-         <RateComponent rate={rate} />
+         <RateComponent
+         rate={userData.Rates.length === 0 ? null : userData.Rates[0]}
+         />
 
-         {rate ? (
-            userData.invoiceCount < 5 || userData.isMember ? (
-               <InvoiceForm
-                  invoiceCount={userData.invoiceCount}
-                  rates={rate}
-                  isMember={userData.isMember}
-               />
-            ) : (
-               <div className="text-center text-destructive flex flex-col gap-3">
-                  You have reached the limit of free invoices
-                  <span className="text-muted-foreground">
-                     Upgrade to premium for unlimited invoices
-                  </span>
-                  <Link href="/membership">
-                  
-                     <Button
-                        variant="default"
-                        size="sm"
-                        className="max-w-xs bg-green-700 hover:bg-green-900"
-                     >
-                        Become a Member
-                     </Button>
-                  </Link>
-               </div>
-            )
+         {userData.Rates.length !== 0 ? (
+         userData.invoiceCount < 5 || userData.isMember ? (
+            <InvoiceForm
+            invoiceCount={userData.invoiceCount}
+            rates={userData.Rates[0]}
+            isMember={userData.isMember}
+            />
+         ) : (
+            <div className="flex flex-col gap-3 text-center text-destructive">
+            You have reached the limit of free invoices
+            <span className="text-muted-foreground">
+               Upgrade to premium for unlimited invoices
+            </span>
+            <Link href="/membership">
+               <Button
+               variant="default"
+               size="sm"
+               className="max-w-xs bg-green-700 hover:bg-green-900"
+               >
+               Become a Member
+               </Button>
+            </Link>
+            </div>
+         )
          ) : null}
       </div>
    );

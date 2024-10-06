@@ -1,12 +1,10 @@
 'use client';
 
 import LoadingButton from '@/components/LoadingButton';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import kyInstance from '@/lib/ky';
 import type { Customer } from '@prisma/client';
 import { useState, useTransition } from 'react';
-import { set } from 'zod';
 
 interface NewInvoiceDialogProps {
    setCustomer: (customer: Customer) => void;

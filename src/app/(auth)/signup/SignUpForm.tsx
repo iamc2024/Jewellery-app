@@ -26,7 +26,6 @@ const SignUpForm = () => {
       resolver: zodResolver(signUpSchema),
       defaultValues: {
          email: '',
-         username: '',
          password: '',
          companyName: '',
          address: '',
@@ -50,20 +49,7 @@ const SignUpForm = () => {
             >
                {error && (
                   <p className={'text-center text-destructive'}> {error}</p>
-               )}
-               <FormField
-                  control={form.control}
-                  name="username"
-                  render={({ field }) => (
-                     <FormItem>
-                        <FormLabel>Username</FormLabel>
-                        <FormControl>
-                           <Input placeholder="Username" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                     </FormItem>
-                  )}
-               />
+               )}              
                <FormField
                   control={form.control}
                   name="email"

@@ -34,3 +34,5 @@ export const GET = async (req: NextRequest) => {
       return Response.json({ error: 'internal server error' }, { status: 500 });
    }
 };
+
+
