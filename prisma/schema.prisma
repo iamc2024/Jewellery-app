@@ -95,8 +95,8 @@ model Product {
   netQuantity       Float
   GrossWeight       Float
   GrossProductPrice Float
-  netStoneWeight    Float?
-  stonePrice        Float?
+  netStoneWeight    Float
+  stonePrice        Float
   MakingCharge      Float
   discount          Float
   InvoiceId         String

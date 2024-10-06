@@ -50,7 +50,6 @@ const Rate = ({ rate: rates }: RateProps) => {
    useEffect(() => {
       const currentDate = formatDate( new Date());
       setCurrentDate(currentDate); 
-      console.log('this is current date', currentDate) 
       form.setValue('date', currentDate);
    }, [form]);
 

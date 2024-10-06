@@ -99,7 +99,7 @@ function Payment() {
 
           const verifyResult = await verifyResponse.json();
 
-          if (verifyResult.isOk) {
+        if (verifyResult.isOk) {
             alert('Payment successful! You are now a member.');
             window.location.reload();
           } else {

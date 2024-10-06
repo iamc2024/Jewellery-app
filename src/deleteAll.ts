@@ -9,7 +9,6 @@ async function deleteAllRecords() {
       await prisma.invoice.deleteMany({});
       await prisma.user.deleteMany({});
 
-      console.log('All records deleted successfully');
    } catch (error) {
       console.error('Error deleting records:', error);
    } finally {
