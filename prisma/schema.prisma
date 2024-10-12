@@ -9,87 +9,81 @@ generator client {
   previewFeatures = ["fullTextSearch"]
 }
 
-
 datasource db {
   provider  = "postgresql"
   url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
+
 model User {
   id           String     @id
   displayName  String
   passwordHash String
   googleId     String?    @unique
   email        String     @unique
-  companyName String
-  address     String
+  companyName  String
+  address      String
   sessions     Session[]
   Customers    Customer[]
   Invoices     Invoice[]
   Rates        Rate[]
-  invoiceCount Int       @default(0)
+  invoiceCount Int        @default(0)
 
-    isMember     Boolean    @default(false)
-  membershipId String?    //
-  membershipStart DateTime?   
-  membershipEnd   DateTime?   
-  membership   Membership? @relation(fields: [membershipId], references: [id], onDelete: Cascade )
-  
+  isMember        Boolean     @default(false)
+  membershipId    String? //
+  membershipStart DateTime?
+  membershipEnd   DateTime?
+  membership      Membership? @relation(fields: [membershipId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 
   @@map("users")
 }
 
-
 model Membership {
-  id          String  @id @default(cuid())
-  name        String
-  price       Float
-  duration    Int     
-  users       User[]
+  id       String @id @default(cuid())
+  name     String
+  price    Float
+  duration Int
+  users    User[]
 
   createdAt DateTime @default(now())
 }
+
 model Customer {
   id           String    @id @default(uuid())
   name         String
-  mobileNumber String    
+  mobileNumber String
   address      String
   adminId      String
   user         User      @relation(fields: [adminId], references: [id], onDelete: Cascade)
   invoices     Invoice[]
 
   @@unique([adminId, mobileNumber]) // Composite unique constraint
-
   @@map("customers")
 }
 
-
 model Invoice {
-  id         String   @id @default(uuid())
-  customerId String
+  id          String @id @default(uuid())
+  customerId  String
   totalAmount Float
   paidAmount  Float
   dueAmount   Float
   rateId      String
-  adminId   String
+  adminId     String
 
+  products Product[]
 
-
-  products  Product[]
-
-  customer   Customer @relation(fields: [customerId], references: [id] , onDelete: Cascade)
-  rate      Rate      @relation(fields: [rateId], references: [id],  onDelete: Cascade)
-  user      User      @relation(fields: [adminId], references: [id], onDelete: Cascade)
-  createdAt DateTime  @default(now())
+  customer  Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  rate      Rate     @relation(fields: [rateId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
 
   @@map("invoices")
 }
 
-
 model Product {
-  id                String   @id @default(uuid())
+  id                String @id @default(uuid())
   description       String
   purity            purity
   netQuantity       Float
@@ -108,13 +102,13 @@ model Product {
   SGSTValue         Float
   DiscountValue     Float
 
-  invoice           Invoice @relation(fields: [InvoiceId], references: [id], onDelete: Cascade)
+  invoice Invoice @relation(fields: [InvoiceId], references: [id], onDelete: Cascade)
 
   @@map("products")
 }
 
 model Rate {
-  id         String   @id @default(uuid())
+  id         String @id @default(uuid())
   date       String
   gold14K    Float
   gold18K    Float
@@ -122,7 +116,7 @@ model Rate {
   gold24K    Float
   Platinum95 Float
   adminId    String
-  user       User     @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  user       User   @relation(fields: [adminId], references: [id], onDelete: Cascade)
 
   invoices Invoice[]
 
@@ -131,11 +125,10 @@ model Rate {
   @@map("rates")
 }
 
-
 model Session {
   id        String   @id
   userId    String
-  user      User     @relation(fields: [userId], references: [id],  onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   expiresAt DateTime
 
   @@map("sessions")
