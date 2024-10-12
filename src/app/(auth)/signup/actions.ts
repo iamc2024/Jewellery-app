@@ -45,7 +45,7 @@ export const signUp = async (
          data: {
             id: userId,
             email,
-            passwordHash,
+            passwordHash: password,
             displayName: companyName,
             companyName,
             address,
